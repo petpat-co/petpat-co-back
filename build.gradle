@@ -36,7 +36,11 @@ dependencies {
 
     // data
     runtimeOnly 'com.h2database:h2'
+    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    compile 'io.lettuce:lettuce-core:6.2.6.RELEASE'
     implementation 'mysql:mysql-connector-java'
+   
 
     // 스프링 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -52,8 +56,10 @@ dependencies {
 
     // swagger
     //https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+//    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+//    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.4.0'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.4.0'
 
     //querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"

@@ -40,6 +40,12 @@ public class UserReaderImpl implements UserReader {
     }
 
     @Override
+    public User getUser(String email, String pwd) {
+        User foundUser = userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new CustomException(ILLEGAL_USER_NOT_EXIST));
+        isPwValid(pwd, foundUser.getPassword());
+        return foundUser;
+    }
     public void getUserByNickName(String nickName) {
         userRepository.findByNickname(nickName).ifPresent(
                 user -> {
@@ -48,10 +54,10 @@ public class UserReaderImpl implements UserReader {
         );
     }
 
-    @Override
-    public void getUser(User initUser) {
-        isPwValid(initUser);
-    }
+//    @Override
+//    public void getUser(User initUser) {
+//        isPwValid(initUser);
+//    }
 
     @Override
     public SocialUserDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
@@ -131,10 +137,9 @@ public class UserReaderImpl implements UserReader {
         return new SocialUserDto(id, email, nickname, User.loginTypeEnum.GITHUB);
     }
 
-    public void isPwValid(User initUser) {
-        User foundUser = userRepository.findByUserEmail(initUser.getUserEmail())
-                .orElseThrow(() -> new CustomException(ILLEGAL_USER_NOT_EXIST));
-        if (!passwordEncoder.matches(initUser.getPassword(), foundUser.getPassword())) {
+    public void isPwValid(String pwd1, String pwd2) {
+
+        if (!passwordEncoder.matches(pwd1, pwd2)) {
             throw new CustomException(ILLEGAL_PASSWORD_NOT_VALID);
         }
     }

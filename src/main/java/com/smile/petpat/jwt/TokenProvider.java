@@ -37,13 +37,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class TokenProvider{
 
-    private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
-    private final UserDetailsServiceImpl userDetailsService;
-    private final JwtTokenUtils jwtTokenUtils;
-    private static final String TOKEN_PREFIX = "Bearer ";
-
     @Value("${jwt.secretkey}")
     String JWT_SECRET;
+    private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+    private final UserDetailsServiceImpl userDetailsService;
+
+    private static final String TOKEN_PREFIX = "Bearer ";
+
 
     // 토큰을 헤더에 담음
     public HttpHeaders headerToken(String token) {
@@ -77,8 +77,9 @@ public class TokenProvider{
                 .orElseThrow(() -> new IllegalArgumentException("유효한 토큰이 아닙니다."));
 
         Date now = new Date();
+
         if (decodedJWT.getExpiresAt().before(now)) {
-            throw new IllegalArgumentException("만료된 토큰");
+            throw new IllegalArgumentException("만료된 엑세스 토큰입니다.");
         }
 
         return decodedJWT
@@ -103,21 +104,19 @@ public class TokenProvider{
 
     // 토큰이 null일 경우 error 처리
     public void tokenNullChk(HttpServletResponse response) throws IOException {
-        log.info("TokenProvider : JWT Token이 존재하지 않습니다.");
         response.setStatus(SC_BAD_REQUEST);
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "JWT Token이 존재하지 않습니다.");
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "토큰이 존재하지 않습니다.");
         new ObjectMapper().writeValue(response.getWriter(), errorResponse);
     }
 
     // 만료된 토큰인 경우 error 처리
     public void tokenExpired(HttpServletResponse response) throws IOException {
-        log.info("TokenProvider : JWT Token이 만료되었습니다.");
         response.setStatus(SC_UNAUTHORIZED);
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다! ><");
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다!");
         new ObjectMapper().writeValue(response.getWriter(), errorResponse);
     }
 

@@ -1,10 +1,7 @@
 package com.smile.petpat.user.dto;
 
 import com.smile.petpat.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +9,7 @@ public class ProfileDto {
 
     @Getter
     @Setter
+    @Builder
     @AllArgsConstructor
     public static class RehomingResponse{
         private Long rehomingId;
