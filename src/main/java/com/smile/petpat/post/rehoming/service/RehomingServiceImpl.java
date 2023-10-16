@@ -7,12 +7,11 @@ import com.smile.petpat.image.domain.ImageUploader;
 import com.smile.petpat.post.category.domain.CategoryGroup;
 import com.smile.petpat.post.category.domain.PetCategory;
 import com.smile.petpat.post.category.domain.PostType;
+import com.smile.petpat.post.category.repository.CategoryGroupRepository;
+import com.smile.petpat.post.category.repository.PetCategoryRepository;
 import com.smile.petpat.post.common.CommonUtils;
 import com.smile.petpat.post.common.status.PostStatus;
-import com.smile.petpat.post.rehoming.domain.Rehoming;
-import com.smile.petpat.post.rehoming.domain.RehomingCommand;
-import com.smile.petpat.post.rehoming.domain.RehomingReader;
-import com.smile.petpat.post.rehoming.domain.RehomingStore;
+import com.smile.petpat.post.rehoming.domain.*;
 import com.smile.petpat.post.rehoming.dto.RehomingPagingDto;
 import com.smile.petpat.post.rehoming.dto.RehomingResDto;
 import com.smile.petpat.post.rehoming.repository.RehomingRepository;
@@ -20,6 +19,7 @@ import com.smile.petpat.user.domain.User;
 import com.smile.petpat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +40,8 @@ public class RehomingServiceImpl implements RehomingService {
     private final CommonUtils commonUtils;
     private final RehomingRepository rehomingRepository;
     private final UserRepository userRepository;
+    private final CategoryGroupRepository categoryGroupRepository;
+    private final PetCategoryRepository petCategoryRepository;
 
     // 1. 분양 글 등록
     @Override
@@ -159,6 +162,19 @@ public class RehomingServiceImpl implements RehomingService {
         Rehoming rehoming = rehomingReader.readRehomingById(postId);
         rehomingReader.userChk(user.getId(), rehoming);
         rehoming.isMatched();
+    }
+
+    // 7-1. 분양 게시글 카테고리별 목록 조회 (회원)
+    @Override
+    public RehomingPagingDto getCategoryListForMember(User user, Long categoryId, Long typeId, Pageable pageable) {
+        Page<RehomingInfo> rehomingInfos = rehomingRepository.rehomingCategoryListForMember(user.getId(), categoryId, typeId, pageable);
+        return new RehomingPagingDto(rehomingInfos);
+    }
+
+    // 7-2. 분양 게시글 카테고리별 목록 조회 (비회원)
+    @Override
+    public RehomingPagingDto getCategoryList(Long categoryId, Long typeId, Pageable pageable) {
+        return new RehomingPagingDto(rehomingRepository.rehomingCategoryList(categoryId, typeId, pageable));
     }
 
     public void userChk(Long userId) {

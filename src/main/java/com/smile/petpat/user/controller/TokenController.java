@@ -2,6 +2,8 @@ package com.smile.petpat.user.controller;
 
 import com.smile.petpat.user.service.TokenServiceImpl;
 import com.smile.petpat.user.service.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @Slf4j
+@Tag(name = "TokenController", description = "토큰관련 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/")
@@ -23,6 +26,7 @@ public class TokenController {
 
     private final TokenServiceImpl tokenService;
 
+    @Operation(summary = "accessToken 재발급", description = "accessToken 재발급")
     @RequestMapping(value = "/accessToken",method = RequestMethod.POST)
     public ResponseEntity<String> regeneratedAccessToken(HttpServletRequest request){
 

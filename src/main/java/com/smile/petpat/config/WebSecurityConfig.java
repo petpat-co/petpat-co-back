@@ -75,8 +75,8 @@ public class WebSecurityConfig {
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/**","h2-console/**","/api/v1/rehoming/**","/swagger-ui.html"
-                        ,"/swagger-ui/**", "/swagger-ui")
+                .antMatchers("/api/v1/user/**","h2-console/**","/api/v1/rehoming/**"
+                        ,"/swagger-ui/**","/v3/api-docs/**")
                 .permitAll()
                 .anyRequest().authenticated();
 

@@ -35,7 +35,7 @@ public class S3Uploader {
     private String bucket;
 
     public String uploadFile(MultipartFile file){
-        String fakeFileName = imageUtils.createFileName(file.getOriginalFilename());
+        String fakeFileName = imageUtils.generateRandomFileName(file.getOriginalFilename());
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
