@@ -4,10 +4,8 @@ import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.common.status.PostStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -15,6 +13,7 @@ public class RehomingInfo {
     private Long rehomingId;
     private String rehomingImg;
     private Long userId;
+    private String profileImgPath;
     private String nickname;
     private String title;
     private String petName;
@@ -32,14 +31,15 @@ public class RehomingInfo {
     private Long bookmarkCnt;
 
     // 회원
-    public RehomingInfo(Long rehomingId, String rehomingImg, Long userId, String nickname,
-                        String title, String petName,
+    public RehomingInfo(Long rehomingId, String rehomingImg, Long userId,
+                        String profileImgPath, String nickname, String title, String petName,
                         String category, String type, RehomingCommand.PetGender gender,
                         PostStatus status, PostType postType, LocalDateTime createdAt, LocalDateTime updatedAt,
                         Long isLiked, Long isBookmarked, int viewCnt, Long likeCnt, Long bookmarkCnt) {
         this.rehomingId = rehomingId;
         this.rehomingImg = rehomingImg;
         this.userId = userId;
+        this.profileImgPath = profileImgPath;
         this.nickname = nickname;
         this.title = title;
         this.petName = petName;
@@ -62,14 +62,15 @@ public class RehomingInfo {
     }
 
     // 비회원
-    public RehomingInfo(Long rehomingId, String rehomingImg, Long userId, String nickname,
-                        String title, String petName,
+    public RehomingInfo(Long rehomingId, String rehomingImg, Long userId,
+                        String profileImgPath, String nickname, String title, String petName,
                         String category, String type, RehomingCommand.PetGender gender,
                         PostStatus status, PostType postType, LocalDateTime createdAt, LocalDateTime updatedAt,
                         int viewCnt, Long likeCnt, Long bookmarkCnt) {
         this.rehomingId = rehomingId;
         this.rehomingImg = rehomingImg;
         this.userId = userId;
+        this.profileImgPath = profileImgPath;
         this.nickname = nickname;
         this.title = title;
         this.petName = petName;

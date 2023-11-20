@@ -1,14 +1,10 @@
 package com.smile.petpat.post.rehoming.service;
 
-import com.smile.petpat.post.rehoming.domain.Rehoming;
 import com.smile.petpat.post.rehoming.domain.RehomingCommand;
-import com.smile.petpat.post.rehoming.domain.RehomingInfo;
 import com.smile.petpat.post.rehoming.dto.RehomingPagingDto;
 import com.smile.petpat.post.rehoming.dto.RehomingResDto;
 import com.smile.petpat.user.domain.User;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface RehomingService {
     void registerRehoming(User user, RehomingCommand rehomingCommand);

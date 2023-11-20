@@ -4,17 +4,20 @@ package com.smile.petpat.post.qna.domain;
 import javax.persistence.*;
 
 import com.smile.petpat.config.comm.Timestamped;
+import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.user.domain.User;
-import lombok.Builder;
-import lombok.Getter;
-import org.springframework.data.annotation.Reference;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+@Entity
 @Getter
 @Table(name = "TB_QNA")
-@Entity
+@Builder
+@AllArgsConstructor
 public class Qna extends Timestamped {
 
     @Id
@@ -22,17 +25,22 @@ public class Qna extends Timestamped {
     @Column(name = "QNA_ID")
     private Long qnaId;
 
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "USER_ID",name = "USER_ID")
+    private User user;
+
     @Column(name = "TITLE")
     private String title;
 
     @Column(name = "CONTENT")
     private String content;
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "USER_ID",name = "USER_ID")
-    private User user;
+
+    @Column(name = "POST_TYPE" , nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostType postType;
 
     @Column(name = "VIEW_CNT")
-    private Long viewCnt;
+    private int viewCnt;
 
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -40,12 +48,14 @@ public class Qna extends Timestamped {
     public Qna() {
     }
 
-    public Qna(Long qnaId, String title, String content, User user, Long viewCnt) {
+    public Qna(Long qnaId, User user, String title, String content, PostType postType, int viewCnt) {
         this.qnaId = qnaId;
+        this.user = user;
         this.title = title;
         this.content = content;
-        this.user = user;
+        this.postType = postType;
         this.viewCnt = viewCnt;
+
     }
     @Builder
     public Qna(String title, String content, User user) {

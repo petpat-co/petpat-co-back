@@ -40,8 +40,6 @@ public class RehomingServiceImpl implements RehomingService {
     private final CommonUtils commonUtils;
     private final RehomingRepository rehomingRepository;
     private final UserRepository userRepository;
-    private final CategoryGroupRepository categoryGroupRepository;
-    private final PetCategoryRepository petCategoryRepository;
 
     // 1. 분양 글 등록
     @Override

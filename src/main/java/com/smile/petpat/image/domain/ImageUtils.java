@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Component
 public class ImageUtils {
-    private static final Set<String> VALID_EXTENSIONS = new HashSet<>(Arrays.asList("gif", "png", "jpg", "jpeg", "" +
+    private static final Set<String> VALID_EXTENSIONS = new HashSet<>(Arrays.asList("gif", "png", "jpg", "jpeg",
                                                                                     "GIF", "PNG", "JPG", "JPEG"));
 
     /* 파일명 난수화 */

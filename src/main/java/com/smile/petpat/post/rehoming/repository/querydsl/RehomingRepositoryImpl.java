@@ -49,6 +49,7 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                         image.repImgNY.eq(true))
                                                 , "rehomingImg"),
                                 rehoming.user.id,
+                                rehoming.user.profileImgPath,
                                 rehoming.user.nickname,
                                 rehoming.title,
                                 rehoming.petName,
@@ -115,6 +116,7 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                         image.repImgNY.eq(true))
                                         , "rehomingImg"),
                                 rehoming.user.id,
+                                rehoming.user.profileImgPath,
                                 rehoming.user.nickname,
                                 rehoming.title,
                                 rehoming.petName,
@@ -150,6 +152,7 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
         return new PageImpl<>(content, pageable, total);
     }
 
+    // 분양 글 카테고리별 목록 조회 (회원)
     @Override
     public Page<RehomingInfo> rehomingCategoryListForMember(Long userId, Long categoryId, Long typeId, Pageable pageable) {
 
@@ -166,12 +169,12 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                         image.repImgNY.eq(true))
                                         , "rehomingImg"),
                                 rehoming.user.id,
+                                rehoming.user.profileImgPath,
                                 rehoming.user.nickname,
                                 rehoming.title,
                                 rehoming.petName,
                                 rehoming.category.categoryGroupName,
                                 rehoming.type.petCategoryName,
-
                                 rehoming.gender,
                                 rehoming.status,
                                 rehoming.postType,
@@ -218,6 +221,7 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
         return new PageImpl<>(content, pageable, total);
     }
 
+    // 분양 글 카테고리별 목록 조회 (비회원)
     @Override
     public Page<RehomingInfo> rehomingCategoryList(Long categoryId, Long typeId, Pageable pageable) {
         QueryResults<RehomingInfo> results;
@@ -234,6 +238,7 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                         image.repImgNY.eq(true))
                                         , "rehomingImg"),
                                 rehoming.user.id,
+                                rehoming.user.profileImgPath,
                                 rehoming.user.nickname,
                                 rehoming.title,
                                 rehoming.petName,
