@@ -16,4 +16,7 @@ public interface PostCategoryService {
     List<TradeCategoryResponse> getTradeCategoryAndCnt(Long tradeCategoryId);
 
     List<PostCategoryDto.RehomingCategoryResponse> getRehomingCategoryAndCnt(Long categoryGroupId);
+
+    List<RehomingCategoryList> getRehomingCategoryList();
+    List<TradeCategoryList> getTradeCategoryList();
 }

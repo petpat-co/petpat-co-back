@@ -32,14 +32,19 @@ public class TradeDto {
         private String content;
         @NotNull(message = "가격은 필수값입니다.")
         private Long price;
+        @NotNull(message = "시도군명은 필수값입니다.")
         private String cityName;
+        @NotNull(message = "시도군명은 필수값입니다.")
         private String cityCountryName;
+        @NotNull(message = "시도군명은 필수값입니다.")
         private String townShipName;
+        @NotNull(message = "시도군명은 필수값입니다.")
         private String detailAdName;
+        @NotNull(message = "시도군명은 필수값입니다.")
         private String fullAdName;
        @NotNull(message = "카테고리는 필수값입니다.")
         private Long tradeCategoryDetailId;
-
+       @NotNull(message = "이미지는 1장이상 첨부해야합니다.")
         private List<MultipartFile> images;
 
         public CommonTrade(){}

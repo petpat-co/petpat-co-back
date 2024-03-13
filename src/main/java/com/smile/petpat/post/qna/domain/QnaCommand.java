@@ -35,4 +35,16 @@ public class QnaCommand {
                 .build();
     }
 
+    public Qna toUpdateEntity(User user, Long postId) {
+        return Qna.builder()
+                .qnaId(postId)
+                .user(user)
+                .title(title)
+                .content(content)
+                .postType(PostType.QNA)
+                .build();
+
+
+    }
+
 }

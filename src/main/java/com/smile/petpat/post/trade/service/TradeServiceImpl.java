@@ -5,7 +5,6 @@ import com.smile.petpat.image.domain.ImageUploader;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.category.domain.TradeCategoryDetail;
 import com.smile.petpat.post.common.CommonUtils;
-import com.smile.petpat.post.rehoming.dto.RehomingPagingDto;
 import com.smile.petpat.post.trade.domain.*;
 import com.smile.petpat.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -41,12 +41,25 @@ public class TradeServiceImpl implements TradeService{
         return trade.getTradeId();
     }
 
+    // 게시물 수정
+    @Override
+    @Transactional
+    public TradeInfo.TradeDetail updateTrade( User user,Long tradeId,TradeCommand tradeCommand) {
+        Trade trade = tradeReader.userChk(tradeId, user.getId());
+        TradeCategoryDetail categoryDetail = tradeReader.readTradeCategoryDetailById(tradeCommand.getTradeCategoryDetailId());
+        Trade initTrade = tradeCommand.toUpdateEntity(user,tradeId,categoryDetail);
+        trade.update(initTrade);
+
+        List<MultipartFile> images = tradeCommand.getImages();
+        imageUploadManager.updateImage(images,tradeId,PostType.TRADE);
+        return getTradeInfo(tradeId, user, trade);
+    }
+
     // 중고거래 게시판 목록 반환(로그인한 유저)
     @Override
-    public RehomingPagingDto listTrade(User user, Pageable pageable) {
+    public TradeInfo.TradePagingListInfo listTrade(User user, Pageable pageable) {
         Page<TradeInfo.TradeList> listTrade = tradeReader.readTradeList(user,pageable);
-        RehomingPagingDto dto= new RehomingPagingDto(listTrade);
-        return dto;
+        return new TradeInfo.TradePagingListInfo(listTrade);
     }
 
     @Override
@@ -73,20 +86,16 @@ public class TradeServiceImpl implements TradeService{
 
     @Override
     @Transactional
-    public TradeInfo.TradeDetail updateTrade(TradeCommand tradeCommand, User user, Long tradeId) {
-        TradeCategoryDetail categoryDetail = tradeReader.readTradeCategoryDetailById(tradeCommand.getTradeCategoryDetailId());
-        Trade initTrade = tradeCommand.toUpdateEntity(user,tradeId,categoryDetail);
-        Trade trade = tradeStore.update(initTrade,user.getId(),tradeId);
-        return getTradeInfo(tradeId, user, trade);
-    }
-
-    @Override
-    @Transactional
     public void deleteTrade(Long tradeId, User user) {
         // 1. 게시글 삭제
         tradeStore.delete(tradeId, user.getId());
         // 2. 해당 게시물 이미지 삭제
         imageUploadManager.removePostImage(tradeId, PostType.TRADE);
+    }
+
+    @Override
+    public List<TradeInfo.TradeList> fetchTrendingTrade(User user) {
+       return tradeReader.fetchTrendingTrade(user.getId());
     }
 
     private TradeInfo.TradeDetail getTradeInfo(Long tradeId, User user, Trade trade) {

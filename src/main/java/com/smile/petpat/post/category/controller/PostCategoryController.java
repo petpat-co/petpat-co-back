@@ -1,6 +1,7 @@
 package com.smile.petpat.post.category.controller;
 
 import com.smile.petpat.common.response.SuccessResponse;
+import com.smile.petpat.post.category.dto.PostCategoryInfo;
 import com.smile.petpat.post.category.service.PostCategoryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @Tag(name = "PostCategoryController", description ="카테고리 관련 API 입니다.")
@@ -55,8 +58,8 @@ public class PostCategoryController {
      */
     @Operation(summary = "중고거래 상세카테고리 그룹 리스트 조회", description = "중고거래 상세카테고리 그룹 리스트 조회")
     @RequestMapping(value = "/tradeCategoryDetail/{tradeCategory}",method = RequestMethod.GET)
-    public void getTradeCategoryDetail(@PathVariable(value = "tradeCategory") Long tradeCategory){
-        postCategoryService.getTradeCategoryDetail(tradeCategory);
+    public SuccessResponse getTradeCategoryDetail(@PathVariable(value = "tradeCategory") Long tradeCategory){
+        return SuccessResponse.success(postCategoryService.getTradeCategoryDetail(tradeCategory));
     }
 
     /**
@@ -77,6 +80,26 @@ public class PostCategoryController {
     @RequestMapping(value = "/rehoming/category/{petType}",method = RequestMethod.GET)
     public SuccessResponse getRehomingCategoryAndCnt(@PathVariable Long petType){
         return SuccessResponse.success(postCategoryService.getRehomingCategoryAndCnt(petType));
+    }
+
+    /**
+     * 분양게시글 카테고리 전체 조회
+     * @return 성공 시 200 Success와 함께 분양 Category에 해당하는 모든 종의 품목 조회
+     */
+    @Operation(summary = "분양 카테고리 전체 조회", description = "분양 카테고리 전체 조회")
+    @RequestMapping(value = "/rehoming/categoryList", method = RequestMethod.GET)
+    public SuccessResponse getRehomingCategory() {
+        return SuccessResponse.success(postCategoryService.getRehomingCategoryList());
+    }
+
+    /**
+     * 거래게시글 카테고리 전체 조회
+     * @return 성공 시 200 Success와 함께 거래 Category에 해당하는 모든 품목 조회
+     */
+    @Operation(summary = "거래 카테고리 전체 조회", description = "거래 카테고리 전체 조회")
+    @RequestMapping(value = "/trade/categoryList", method = RequestMethod.GET)
+    public SuccessResponse getTradeCategory() {
+        return SuccessResponse.success(postCategoryService.getTradeCategoryList());
     }
 
 

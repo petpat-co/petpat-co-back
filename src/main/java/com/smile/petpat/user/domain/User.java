@@ -1,14 +1,18 @@
 package com.smile.petpat.user.domain;
 
-import com.smile.petpat.user.dto.UserDto;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,7 +20,7 @@ import java.util.Collection;
 @Table(name = "TB_USER")
 @SQLDelete(sql = "UPDATE TB_USER SET DELETED = true, NICKNAME =CONCAT('del_',FLOOR(RAND()*1000000)) WHERE USER_ID=? ")
 @Where(clause = "DELETED = false")
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,24 +41,23 @@ public class User implements UserDetails {
     @Column(name = "DELETED")
     private Boolean deleted = Boolean.FALSE;
 
-    // 후에 여러컬럼이나 테이블로 분리할지 생각해야함
-    @Column(name = "LOCATION")
-    private String location;
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "USER_ROLE", length = 20)
+    private UserRole userRole;
 
     @Builder
-    public User(Long id, String userEmail, String nickname, String password,  String profileImgPath, loginTypeEnum loginType,  String location) {
+    public User(Long id, String userEmail, String nickname, String password,  String profileImgPath, loginTypeEnum loginType, UserRole userRole) {
         this.id = id;
         this.userEmail = userEmail;
         this.nickname = nickname;
         this.password = password;
         this.profileImgPath = profileImgPath;
         this.loginType = loginType;
-        this.location = location;
+        this.userRole = userRole;
     }
 
     public User(User socialUser) {
     }
-
 
 
      //유저 프로필 변경
@@ -81,35 +84,6 @@ public class User implements UserDetails {
         }
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
 
 
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

@@ -3,6 +3,7 @@ package com.smile.petpat.image.domain;
 import com.smile.petpat.post.category.domain.PostType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -18,24 +19,32 @@ public class ImageUploadManager {
 
     /** User 프로필 등록 */
     public String saveProfileImage(MultipartFile multipartFile,String originImgPath) {
+<<<<<<< HEAD
         imageUtils.getFileExtension(multipartFile.getOriginalFilename());
+=======
+        String fakeFileName = imageUtils.generateRandomFileName(multipartFile.getOriginalFilename());
+//        String originFileName = multipartFile.getOriginalFilename();
+//        String filepath = s3Uploader.uploadFile(multipartFile);
+
+>>>>>>> b39bf65d8346f427d09a47da0bc62da20a05aa8a
         //기존 프로필 이미지 삭제
         if(originImgPath!="") {  //기존 프로필 이미지가 있는 경우
             s3Uploader.deleteImage(originImgPath);
         }
-        return s3Uploader.uploadFile(multipartFile);
+        return s3Uploader.uploadFile(multipartFile, fakeFileName);
     }
 
     /* 게시글 이미지 등록 (대표이미지 설정) */
+    @Transactional
     public void uploadPostImage(List<MultipartFile> multipartFiles, Long postId, PostType postType) {
         List<Image> imageList = new ArrayList<>();
         for (int i = 0; i < multipartFiles.size(); i++) {
             String fakeFileName = imageUtils.generateRandomFileName(multipartFiles.get(i).getOriginalFilename());
             String originalFileName = multipartFiles.get(i).getOriginalFilename();
-            String filePath = s3Uploader.uploadFile(multipartFiles.get(i));
+            String filePath = s3Uploader.uploadFile(multipartFiles.get(i), fakeFileName);
             boolean repImgNY = i == 0; // 제일 먼저 등록되는 이미지의 경우 대표이미지로 설정
 
-            Image image = imageUploader.toImageEntity(fakeFileName, originalFileName, filePath, postId, postType, repImgNY);
+            Image image = imageUploader.toImageEntity(originalFileName, fakeFileName,  filePath, postId, postType, repImgNY);
             imageList.add(image);
         }
         imageUploader.savePostImage(imageList);

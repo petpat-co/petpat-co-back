@@ -3,6 +3,7 @@ package com.smile.petpat.config;
 import com.smile.petpat.jwt.JwtAuthenticationFilter;
 import com.smile.petpat.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -75,9 +76,17 @@ public class WebSecurityConfig {
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/**","h2-console/**","/api/v1/rehoming/**"
+                .antMatchers("/api/v1/user/**","h2-console/**"
                         ,"/swagger-ui/**","/v3/api-docs/**")
                 .permitAll()
+
+                .antMatchers(HttpMethod.GET,"/api/v1/rehoming/public/**").hasRole("GUEST")
+                .antMatchers("/api/v1/rehoming/**").hasRole("USER")
+
+                .antMatchers("/api/v1/guest").hasRole("GUEST")
+                .antMatchers("/api/v1/user").hasRole("USER")
+                .antMatchers("/api/v1/admin").hasRole("ADMIN")
+
                 .anyRequest().authenticated();
 
         return http.build();
@@ -109,6 +118,7 @@ public class WebSecurityConfig {
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addExposedHeader("Authorization");
+        corsConfiguration.addExposedHeader("RefreshToken");
         corsConfiguration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);

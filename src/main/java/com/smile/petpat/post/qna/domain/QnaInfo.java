@@ -5,9 +5,12 @@ import com.smile.petpat.post.common.CalculateTime;
 import com.smile.petpat.post.common.status.PostStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QnaInfo {
@@ -51,77 +54,90 @@ public class QnaInfo {
         }
 
     }
-//
-//    @Getter
-//    @ToString
-//    @AllArgsConstructor
-//    public static class QnaDetail{
-//        private Long qnaId;
-//        private Long userId;
-//        private String nickname;
-//        private String title;
-//        private String content;
-//        private List<String> imageList;
-//        private PostType postType;
-//        private int viewCnt;
-//        private String createAt;
-//
-//        public QnaDetail(){
-//
-//        }
-//
-//        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, List<String> imageList, PostType postType,
-//                         LocalDateTime createAt
-//        ) {
-//            this.qnaId = qnaId;
-//            this.userId = userId;
-//            this.nickname = nickname;
-//            this.title = title;
-//            this.content = content;
-//            this.imageList = imageList;
-//            this.postType = postType;
-//            this.viewCnt = viewCnt;
-//            this.createAt = CalculateTime.dateformatForPost(createAt);
-//        }
-//
-//        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, PostType postType, Long isLiked, Long isBookmarked, int viewCnt,
-//                           Long likeCnt, Long bookmarkCnt, String qnaCategoryDetailName,PostStatus status,LocalDateTime createAt) {
-//            this.qnaId = qnaId;
-//            this.userId = userId;
-//            this.nickname = nickname;
-//            this.title = title;
-//            this.content = content;
-//            this.postType = postType;
-//            this.viewCnt = viewCnt;
-//            this.createAt = CalculateTime.dateformatForPost(createAt);
-//        }
-//
-//        public QnaDetail(QnaInfo.QnaDetail qnaDetail, List<String> imageList) {
-//            this.qnaId = qnaDetail.qnaId;
-//            this.userId = qnaDetail.userId;
-//            this.nickname = qnaDetail.nickname;
-//            this.title = qnaDetail.title;
-//            this.content = qnaDetail.content;
-//            this.imageList = imageList;
-//            this.postType = qnaDetail.postType;
-//            this.isLiked = qnaDetail.isLiked;
-//            this.isBookmarked = qnaDetail.isBookmarked;
-//            this.viewCnt = qnaDetail.viewCnt;
-//            this.likeCnt = qnaDetail.likeCnt;
-//            this.bookmarkCnt = qnaDetail.bookmarkCnt;
-//            this.qnaCategoryDetailName = qnaDetail.qnaCategoryDetailName;
-//            this.status=qnaDetail.status;
-//            this.createAt = qnaDetail.createAt;
-//        }
-//
-//
-//
-//
-//    }
-//
-//    public static  Boolean booleanChk(Long chkValue) {
-//        return chkValue == 0?false : true;
-//    }
+
+    @Getter
+    @ToString
+    @AllArgsConstructor
+    public static class QnaDetail{
+        private Long qnaId;
+        private Long userId;
+        private String nickname;
+        private String title;
+        private String content;
+        private List<String> imageList;
+        private PostType postType;
+        private int viewCnt;
+        private String createAt;
+
+        public QnaDetail(){
+
+        }
+
+        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, List<String> imageList, PostType postType,
+                         LocalDateTime createAt
+        ) {
+            this.qnaId = qnaId;
+            this.userId = userId;
+            this.nickname = nickname;
+            this.title = title;
+            this.content = content;
+            this.imageList = imageList;
+            this.postType = postType;
+            this.viewCnt = viewCnt;
+            this.createAt = CalculateTime.dateformatForPost(createAt);
+        }
+
+        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, PostType postType, Long isLiked, Long isBookmarked, int viewCnt,
+                           Long likeCnt, Long bookmarkCnt, String qnaCategoryDetailName,PostStatus status,LocalDateTime createAt) {
+            this.qnaId = qnaId;
+            this.userId = userId;
+            this.nickname = nickname;
+            this.title = title;
+            this.content = content;
+            this.postType = postType;
+            this.viewCnt = viewCnt;
+            this.createAt = CalculateTime.dateformatForPost(createAt);
+        }
+
+        public QnaDetail(QnaDetail qnaDetail, List<String> imageList) {
+            this.qnaId = qnaDetail.qnaId;
+            this.userId = qnaDetail.userId;
+            this.nickname = qnaDetail.nickname;
+            this.title = qnaDetail.title;
+            this.content = qnaDetail.content;
+            this.imageList = imageList;
+            this.postType = qnaDetail.postType;
+            this.viewCnt = qnaDetail.viewCnt;
+            this.createAt = qnaDetail.createAt;
+        }
+
+
+
+
+    }
+
+    public static  Boolean booleanChk(Long chkValue) {
+        return chkValue == 0?false : true;
+    }
+@Getter
+@NoArgsConstructor
+public static class QnaPagingListInfo{
+    private int contentCnt;
+    private List<?> content = new ArrayList<>();
+    private int pageSize;
+    private int page;
+    private int totalPage;
+
+    public QnaPagingListInfo(Page<?> pageList) {
+        this.contentCnt = (int) pageList.getTotalElements();
+        this.content = pageList.getContent();
+        this.pageSize = pageList.getSize();
+        this.page = pageList.getPageable().getPageNumber();
+        this.totalPage = pageList.getTotalPages();
+
+    }
+
+}
 
 
 }

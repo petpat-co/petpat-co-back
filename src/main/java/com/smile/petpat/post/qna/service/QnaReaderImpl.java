@@ -32,10 +32,22 @@ public class QnaReaderImpl implements QnaReader {
     }
 
     @Override
-    public void userChk(Long userId, Long qnaId){
-        Qna qna = readQnaById(qnaId);
+    public QnaInfo.QnaDetail readQnaDetailForUser(Long userId, Long postId) {
+        readQnaById(postId);
+        return qnaRepository.qnaDetailForUser(userId, postId);
+    }
+
+    public QnaInfo.QnaDetail readQnaDetail(Long postId) {
+        readQnaById(postId);
+        return qnaRepository.qnaDetail(postId);
+    }
+
+    @Override
+    public Qna userChk(Long postId, Long userId){
+        Qna qna = readQnaById(postId);
         if(!qna.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
+        return qna;
     }
 }

@@ -5,6 +5,8 @@ import javax.persistence.*;
 
 import com.smile.petpat.config.comm.Timestamped;
 import com.smile.petpat.post.category.domain.PostType;
+import com.smile.petpat.post.rehoming.domain.Rehoming;
+import com.smile.petpat.post.trade.domain.Trade;
 import com.smile.petpat.user.domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,5 +64,15 @@ public class Qna extends Timestamped {
         this.title = title;
         this.content = content;
         this.user = user;
+    }
+
+    public void update(Qna qna){
+        this.title = qna.getTitle();
+        this.content = qna.getContent();
+
+    }
+
+    public void updateViewCnt(Qna qna) {
+        this.viewCnt = qna.getViewCnt() + 1;
     }
 }

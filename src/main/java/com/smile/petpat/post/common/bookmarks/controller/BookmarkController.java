@@ -6,6 +6,7 @@ import com.smile.petpat.user.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,6 +21,6 @@ public class BookmarkController {
     @RequestMapping(value = "/{postType}/{postId}", method = RequestMethod.POST)
     public SuccessResponse<HashMap<String, String>> isBookmark(@PathVariable String postType, @PathVariable Long postId,
                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return SuccessResponse.success(bookmarkService.BookmarkPost(postType, postId, userDetails.getUser()), "OK");
+        return SuccessResponse.success(bookmarkService.bookmarkPost(postType, postId, userDetails.getUsername()), "OK");
     }
 }

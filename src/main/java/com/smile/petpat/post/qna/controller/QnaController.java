@@ -3,6 +3,7 @@ package com.smile.petpat.post.qna.controller;
 import com.smile.petpat.common.response.SuccessResponse;
 import com.smile.petpat.post.qna.domain.QnaCommand;
 import com.smile.petpat.post.qna.domain.QnaDto;
+import com.smile.petpat.post.qna.domain.QnaInfo;
 import com.smile.petpat.post.qna.service.QnaService;
 import com.smile.petpat.user.service.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,19 +55,27 @@ public class QnaController {
 
     }
 
-//    /**
-//     * Qna 게시물 상세 조회
-//     * @return 성공 시 200 Success 및 해당 게시물 반환
-//     */
-//    @ApiOperation(value = "Qna 상세 조회", notes = "Qna 상세 조회")
-//    @RequestMapping(value = "/detail", method = RequestMethod.GET)
-//    public SuccessResponse detailQna(@RequestParam Long qnaId,
-//                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        if (userDetails == null) {
-//            return SuccessResponse.success(qnaService.detailQna(qnaId), "OK");
-//        }
-//        return SuccessResponse.success(qnaService.detailQnaForUser(qnaId, userDetails.getUser()), "OK");
-//    }
+    /**
+     * Qna 게시물 상세 조회
+     * @return 성공 시 200 Success 및 해당 게시물 반환
+     */
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Qna 상세 조회", description = "Qna 상세 조회")
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public SuccessResponse detailQna(@RequestParam Long postId,
+                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return SuccessResponse.success(qnaService.detailQnaForUser(postId, userDetails.getUser()), "OK");
+    }
+
+    @PreAuthorize("hasRole('GUEST')")
+    @Operation(summary = "Qna 상세 조회", description = "Qna 상세 조회")
+    @RequestMapping(value = "/public/detail", method = RequestMethod.GET)
+    public SuccessResponse detailQnaPublic(@RequestParam Long postId) {
+        return SuccessResponse.success(qnaService.detailQna(postId), "OK");
+    }
+
+
 
     /**
      * Qna 게시물 수정
@@ -74,7 +84,11 @@ public class QnaController {
     @Operation(summary = "Qna 게시물 수정", description = "Qna 게시물 수정")
 
     @RequestMapping(value = "/{postId}",method = RequestMethod.PUT)
-    public void qnaModify(@PathVariable String postId){
+    public SuccessResponse updateQna(@RequestBody QnaDto.CommonQna qnaDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @PathVariable Long postId){
+        QnaCommand qnaCommand = qnaDto.toCommand();
+        return SuccessResponse.success(qnaService.updateQna(userDetails.getUser(), postId, qnaCommand));
 
     }
 
@@ -84,7 +98,10 @@ public class QnaController {
      */
     @Operation(summary = "Qna 게시물 삭제", description = "Qna 게시물 삭제")
     @RequestMapping(value = "/{postId}",method = RequestMethod.DELETE)
-    public void qnaRemove(@PathVariable String postId){
+    public SuccessResponse deleteQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                     @RequestParam Long postId){
+        qnaService.deleteQna(postId, userDetails.getUser());
+        return SuccessResponse.noDataSuccess("OK");
 
     }
 }

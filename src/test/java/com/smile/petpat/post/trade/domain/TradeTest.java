@@ -6,6 +6,7 @@ import com.smile.petpat.post.category.repository.TradeCategoryDetailRepository;
 import com.smile.petpat.post.common.status.PostStatus;
 import com.smile.petpat.post.trade.repository.TradeRepository;
 import com.smile.petpat.user.domain.User;
+import com.smile.petpat.user.domain.UserRole;
 import com.smile.petpat.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +41,8 @@ class TradeTest {
                     .nickname("닉네임테스트1")
                     .password("passwordtest1234@")
                     .profileImgPath("http://testUserProfile1.jpg")
+                    .loginType(User.loginTypeEnum.NORMAL)
+                    .userRole(UserRole.ROLE_USER)
                     .build();
             userRepository.save(user1);
 

@@ -52,7 +52,6 @@ public class getMyRehomingTest {
                 .profileImgPath("TEST.jpg")
                 .loginType(User.loginTypeEnum.NORMAL)
                 .build();
-
         //사용자가 2개의 Rehoming 게시글 작성
         ProfileDto.RehomingResponse response1=
                 ProfileDto.RehomingResponse.builder()
@@ -71,7 +70,6 @@ public class getMyRehomingTest {
         Mockito.when(userRepository.getMyRehoming(user.getId(),pageable))
                 .thenReturn(result);
     }
-
     @Nested
     @DisplayName("Success")
     class Success{

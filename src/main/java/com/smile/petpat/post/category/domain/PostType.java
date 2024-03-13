@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 public enum PostType {
     QNA("QNA"),
-    REHOMING("분양" ),
-    TRADE("중고거래"),
+    REHOMING("REHOMING"),
+    TRADE("TRADE"),
 
     ;
     private final String description;

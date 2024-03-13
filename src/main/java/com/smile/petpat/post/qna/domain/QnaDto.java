@@ -1,16 +1,15 @@
 package com.smile.petpat.post.qna.domain;
 
-import com.smile.petpat.post.qna.domain.QnaCommand;
-import com.smile.petpat.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+@Getter
 public class QnaDto {
 
     @Getter

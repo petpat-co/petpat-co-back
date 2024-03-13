@@ -6,6 +6,7 @@ import com.smile.petpat.post.category.repository.PetCategoryRepository;
 import com.smile.petpat.post.category.repository.PostCategoryGroupRepository;
 import com.smile.petpat.post.rehoming.domain.Rehoming;
 import com.smile.petpat.post.rehoming.domain.RehomingReader;
+import com.smile.petpat.post.rehoming.dto.RehomingResDto;
 import com.smile.petpat.post.rehoming.repository.RehomingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,8 @@ public class RehomingReaderImpl implements RehomingReader {
     }
 
     @Override
-    public void userChk(Long userId, Rehoming rehoming) {
-        if (!rehoming.getUser().getId().equals(userId)) {
+    public void userChk(String userEmail, Rehoming rehoming) {
+        if (!rehoming.getUser().getUserEmail().equals(userEmail)) {
             throw new IllegalArgumentException("본인 글만 수정/삭제가 가능합니다.");
         }
     }
@@ -40,6 +41,11 @@ public class RehomingReaderImpl implements RehomingReader {
         return petCategoryRepository.findById(petCategoryId).orElseThrow(
                 () -> new IllegalArgumentException("해당 반려동물 종류를 찾지 못했습니다.")
         );
+    }
+
+    @Override
+    public RehomingResDto readRehomingDetailForMember(String userEmail, Long rehomingId) {
+        return null;
     }
 
     @Override

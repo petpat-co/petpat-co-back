@@ -20,9 +20,9 @@ public class RehomingStoreImpl implements RehomingStore {
 
     /* 2. 분양 게시글 삭제 */
     @Override
-    public void delete(Long userId, Long postId) {
+    public void delete(String userEmail, Long postId) {
         Rehoming rehoming = rehomingReader.readRehomingById(postId);
-        rehomingReader.userChk(userId, rehoming);
+        rehomingReader.userChk(userEmail, rehoming);
         rehomingRepository.deleteById(postId);
     }
 }

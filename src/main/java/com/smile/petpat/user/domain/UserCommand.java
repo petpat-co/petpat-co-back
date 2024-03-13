@@ -20,13 +20,15 @@ public class UserCommand {
     private String nickname;
     private String password;
     private String profileImgPath;
+    private UserRole userRole;
 
 
-    public UserCommand(String userEmail, String nickname, String password, String profileImgPath) {
+    public UserCommand(String userEmail, String nickname, String password, String profileImgPath, UserRole userRole) {
         this.userEmail = userEmail;
         this.nickname = nickname;
         this.password = password;
         this.profileImgPath = profileImgPath;
+        this.userRole = userRole;
     }
 
     public UserCommand(UserDto.ModifyUserRequest request, String profileImgPath){
@@ -41,6 +43,7 @@ public class UserCommand {
                 .nickname(nickname)
                 .password(password)
                 .profileImgPath(profileImgPath)
+                .userRole(userRole)
                 .build();
     }
 

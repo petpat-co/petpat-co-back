@@ -14,31 +14,48 @@ public class PostCategoryDto {
     @Setter
     @ToString
     public static class RequestRegisterCategoryGroup{
-        private String categoryGroupName;
+        private String firstCategoryName;
         private String postType;
     }
 
     @Getter
     @AllArgsConstructor
     public static class TradeCategoryResponse{
-        private Long tradeCategoryId;
-        private String tradeCategoryName;
-        List<TradeCategoryDetailResponse> tradeCategoryDetailList;
+        private Long secondCategoryId;
+        private String secondCategoryName;
+        List<TradeCategoryDetailResponse> thirdCategoryList;
     }
 
     @Getter
     @AllArgsConstructor
     public static class TradeCategoryDetailResponse{
-        private Long tradeCategoryDetailId;
-        private String tradeCategoryDetailName;
-        private Long tradeCategoryDetailCnt;
+        private Long thirdCategoryId;
+        private String thirdCategoryName;
+        private Long thirdCategoryCnt;
     }
 
     @Getter
     @AllArgsConstructor
     public static class RehomingCategoryResponse{
-        private Long petCategoryId;
-        private String petCategoryName;
-        private Long petCategoryCnt;
+        private Long secondCategoryId;
+        private String secondCategoryName;
+        private Long secondCategoryCnt;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class RehomingCategoryList {
+        private Long firstCategoryId;
+        private String firstCategoryName;
+        private List<RehomingCategoryResponse> secondCategoryList;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class TradeCategoryList {
+        private Long firstCategoryId;
+        private String firstCategoryName;
+        private List<TradeCategoryResponse> secondCategoryList;
+    }
+
 }

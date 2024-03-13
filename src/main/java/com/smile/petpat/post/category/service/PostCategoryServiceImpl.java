@@ -4,6 +4,7 @@ import com.smile.petpat.post.category.domain.*;
 import com.smile.petpat.post.category.dto.PostCategoryDto;
 import com.smile.petpat.post.category.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static com.smile.petpat.post.category.dto.PostCategoryInfo.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostCategoryServiceImpl implements PostCategoryService{
@@ -88,5 +90,29 @@ public class PostCategoryServiceImpl implements PostCategoryService{
     @Override
     public List<PostCategoryDto.RehomingCategoryResponse> getRehomingCategoryAndCnt(Long categoryGroupId) {
         return categoryRepository.getRehomingCategoryAndCnt(categoryGroupId);
+    }
+
+    public List<PostCategoryDto.RehomingCategoryList> getRehomingCategoryList() {
+        return postCategoryGroupRepository.findAllByPostType(PostType.REHOMING).stream()
+                .map(categoryGroup -> {
+                    List<PostCategoryDto.RehomingCategoryResponse> petCategoryList = categoryRepository.getRehomingCategoryAndCnt(categoryGroup.getCategoryGroupId());
+                    return new PostCategoryDto.RehomingCategoryList(
+                            categoryGroup.getCategoryGroupId(),
+                            categoryGroup.getCategoryGroupName(),
+                            petCategoryList
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostCategoryDto.TradeCategoryList> getTradeCategoryList() {
+        return postCategoryGroupRepository.findAllByPostType(PostType.TRADE).stream()
+                .map(categoryGroup -> new PostCategoryDto.TradeCategoryList(
+                        categoryGroup.getCategoryGroupId(),
+                        categoryGroup.getCategoryGroupName(),
+                        getTradeCategoryAndCnt(categoryGroup.getCategoryGroupId())
+                ))
+                .collect(Collectors.toList());
     }
 }

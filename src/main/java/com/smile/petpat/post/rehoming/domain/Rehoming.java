@@ -32,8 +32,8 @@ public class Rehoming extends Timestamped {
     @Column(name = "TITLE", nullable = false, length = 20)
     private String title;
 
-    @Column(name = "DESCRIPTION", columnDefinition = "TEXT", nullable = false, length = 2000)
-    private String description;
+    @Column(name = "CONTENT", columnDefinition = "TEXT", nullable = false, length = 2000)
+    private String content;
 
     @Column(name = "PET_NAME", nullable = false)
     private String petName;
@@ -88,14 +88,14 @@ public class Rehoming extends Timestamped {
         this.status = PostStatus.REHOMING_MATCHED;
     }
 
-    public Rehoming(Long rehomingId, User user, String title, String description, String petName, LocalDate petAge,
+    public Rehoming(Long rehomingId, User user, String title, String content, String petName, LocalDate petAge,
                     CategoryGroup category, PetCategory type, RehomingCommand.PetGender gender, String cityName,
                     String cityCountryName, String townShipName, String detailAdName, String fullAdName,
                     PostStatus status, PostType postType, int viewCnt) {
         this.rehomingId = rehomingId;
         this.user = user;
         this.title = title;
-        this.description = description;
+        this.content = content;
         this.petName = petName;
         this.petAge = petAge;
         this.category = category;
@@ -118,7 +118,7 @@ public class Rehoming extends Timestamped {
     // 분양 게시글 수정
     public void update(Rehoming initRehoming) {
         this.title = initRehoming.getTitle();
-        this.description = initRehoming.getDescription();
+        this.content = initRehoming.getContent();
         this.petName = initRehoming.getPetName();
         this.petAge = initRehoming.getPetAge();
         this.category = initRehoming.getCategory();

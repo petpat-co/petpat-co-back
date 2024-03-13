@@ -9,4 +9,7 @@ import java.util.List;
 public interface QnaRepositoryQueryDsl {
     Page<QnaInfo.QnaList> qnaList(Long userId, Pageable pageable);
 
+    QnaInfo.QnaDetail qnaDetailForUser(Long userId, Long postId);
+    QnaInfo.QnaDetail qnaDetail(Long postId);
+
 }

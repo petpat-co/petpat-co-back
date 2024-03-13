@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.smile.petpat.image.domain.QImage.image;
@@ -29,8 +31,7 @@ public class TradeRepositoryImpl implements TradeRepositoryQueryDsl{
 
     @Override
     public List<TradeInfo.TradeList> tradeList(Long userId) {
-        List<TradeInfo.TradeList> result;
-               return result = queryFactory
+               return  queryFactory
                 .select
                         (Projections.constructor
                                 (TradeInfo.TradeList.class,
@@ -38,8 +39,6 @@ public class TradeRepositoryImpl implements TradeRepositoryQueryDsl{
                                         trade.user.nickname,
                                         trade.title,
                                         trade.price,
-                                        trade.price,
-                                        trade.cityName,
                                         trade.cityName,
                                         trade.cityCountryName,
                                         ExpressionUtils.as(
@@ -95,11 +94,6 @@ public class TradeRepositoryImpl implements TradeRepositoryQueryDsl{
                         (Projections.constructor
                                 (TradeInfo.TradeList.class,
                                         trade.tradeId,
-                                        trade.user.nickname,
-                                        trade.title,
-                                        trade.price,
-                                        trade.cityName,
-                                        trade.cityCountryName,
                                         ExpressionUtils.as(
                                                 JPAExpressions
                                                         .select(image.filePath)
@@ -110,6 +104,12 @@ public class TradeRepositoryImpl implements TradeRepositoryQueryDsl{
                                                                         .and(image.repImgNY.eq(true))
                                                         )
                                                 ,"image"),
+                                        trade.title,
+                                        trade.price,
+                                        trade.cityName,
+                                        trade.cityCountryName,
+                                        trade.townShipName,
+
                                         ExpressionUtils.as(
                                                 JPAExpressions
                                                         .select(likes.count())
@@ -118,29 +118,8 @@ public class TradeRepositoryImpl implements TradeRepositoryQueryDsl{
                                                                 likes.user.id.eq(userId)
                                                                         .and(likes.postId.eq(trade.tradeId))
                                                         ), "isLiked"),
-                                        ExpressionUtils.as(
-                                                JPAExpressions
-                                                        .select(bookmark.count())
-                                                        .from(bookmark)
-                                                        .where(
-                                                                bookmark.user.id.eq(userId)
-                                                                        .and(bookmark.postId.eq(trade.tradeId))
-                                                        ), "isBookmarked"),
                                         trade.viewCnt,
-                                        ExpressionUtils.as(
-                                                JPAExpressions
-                                                        .select(likes.count())
-                                                        .from(likes)
-                                                        .where(likes.postId.eq(trade.tradeId)),
-                                                "likeCnt"),
-                                        ExpressionUtils.as(
-                                                JPAExpressions
-                                                        .select(bookmark.count())
-                                                        .from(bookmark)
-                                                        .where(bookmark.postId.eq(trade.tradeId)),
-                                                "bookmarkCnt"),
-                                        trade.status,
-                                        trade.createdAt
+                                        trade.status
                                 )
                         )
                 .from(trade)
@@ -210,5 +189,47 @@ public class TradeRepositoryImpl implements TradeRepositoryQueryDsl{
                 .from(trade)
                 .where(trade.tradeId.eq(tradeId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<TradeInfo.TradeList> fetchTrendingTrade(Long userId, LocalDateTime startOfWeek, LocalDateTime endOfWeek) {
+         return queryFactory
+                 .select
+                         (Projections.constructor
+                                 (TradeInfo.TradeList.class,
+                                         trade.tradeId,
+                                         ExpressionUtils.as(
+                                                 JPAExpressions
+                                                         .select(image.filePath)
+                                                         .from(image)
+                                                         .where(
+                                                                 image.postId.eq(trade.tradeId)
+                                                                         .and(image.postType.eq(PostType.TRADE))
+                                                                         .and(image.repImgNY.eq(true))
+                                                         )
+                                                 ,"image"),
+                                         trade.title,
+                                         trade.price,
+                                         trade.cityName,
+                                         trade.cityCountryName,
+                                         ExpressionUtils.as(
+                                                 JPAExpressions
+                                                         .select(likes.count())
+                                                         .from(likes)
+                                                         .where(
+                                                                 likes.user.id.eq(userId)
+                                                                         .and(likes.postId.eq(trade.tradeId))
+                                                         ), "isLiked"),
+                                         trade.viewCnt,
+                                         trade.status
+                                 )
+                         )
+                 .from(trade)
+                 .leftJoin(likes).on(trade.tradeId.eq(likes.postId).and(likes.postType.eq(PostType.TRADE)))
+                 .where(trade.createdAt.between(startOfWeek,endOfWeek))
+                 .orderBy(likes.count().desc(),trade.createdAt.desc())
+                 .groupBy (trade.tradeId)
+                 .limit(3)
+                 .fetch();
     }
 }

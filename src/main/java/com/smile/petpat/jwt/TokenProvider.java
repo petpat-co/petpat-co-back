@@ -65,9 +65,14 @@ public class TokenProvider{
     }
 
     public Authentication getAuthentication(String token, HttpServletResponse response) throws IOException {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(decodeUsername(token, response));
+        if (token != null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(decodeUsername(token, response));
+            return new UsernamePasswordAuthenticationToken(
+                    // The credentials that prove the principal is correct.
+                    userDetails, "", userDetails.getAuthorities());
+        }
+        UserDetails userDetails = userDetailsService.makeGuest();
         return new UsernamePasswordAuthenticationToken(
-                // The credentials that prove the principal is correct.
                 userDetails, "", userDetails.getAuthorities());
     }
 
@@ -89,6 +94,7 @@ public class TokenProvider{
 
     // 토큰 유효성 검사
     public Optional<DecodedJWT> isValidToken(String token, HttpServletResponse response) throws IOException {
+        log.info("만료된냐? , {} ", token);
         DecodedJWT jwt = null;
         try {
             JWTVerifier verifier = JWT

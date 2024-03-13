@@ -1,6 +1,7 @@
 package com.smile.petpat.user.service;
 
 import com.smile.petpat.user.domain.User;
+import com.smile.petpat.user.domain.UserRole;
 import com.smile.petpat.user.domain.UserStore;
 import com.smile.petpat.user.dto.SocialUserDto;
 import com.smile.petpat.user.repository.UserRepository;
@@ -28,6 +29,7 @@ public class UserStoreImpl implements UserStore {
                 .password(passwordEncoder.encode(initUser.getPassword()))
                 .profileImgPath(initUser.getProfileImgPath())
                 .loginType(User.loginTypeEnum.NORMAL)
+                .userRole(UserRole.ROLE_USER)
                 .build();
         return userRepository.save(user);
     }

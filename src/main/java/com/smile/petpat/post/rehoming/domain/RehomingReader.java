@@ -2,13 +2,15 @@ package com.smile.petpat.post.rehoming.domain;
 
 import com.smile.petpat.post.category.domain.CategoryGroup;
 import com.smile.petpat.post.category.domain.PetCategory;
+import com.smile.petpat.post.rehoming.dto.RehomingResDto;
 
 public interface RehomingReader {
     Rehoming readRehomingById(Long rehomingId);
 
-    void userChk(Long userId, Rehoming rehoming);
+    void userChk(String userEmail, Rehoming rehoming);
 
     CategoryGroup readCategoryById(Long categoryId);
 
     PetCategory readPetTypeById(Long petCategoryId);
+    RehomingResDto readRehomingDetailForMember(String userEmail, Long rehomingId);
 }

@@ -2,6 +2,7 @@ package com.smile.petpat.post.trade.service;
 
 import com.smile.petpat.post.category.domain.TradeCategoryDetail;
 import com.smile.petpat.post.category.repository.TradeCategoryDetailRepository;
+import com.smile.petpat.post.common.WeekRange;
 import com.smile.petpat.post.trade.domain.Trade;
 import com.smile.petpat.post.trade.domain.TradeInfo;
 import com.smile.petpat.post.trade.domain.TradeReader;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Slf4j
 @Component
@@ -22,7 +25,6 @@ public class TradeReaderImpl implements TradeReader {
 
     @Override
     public Page<TradeInfo.TradeList> readTradeList(User user, Pageable pageable) {
-       // return tradeRepository.findAll();
         return tradeRepository.tradeList_Paging(user.getId(),pageable);
     }
 
@@ -46,10 +48,21 @@ public class TradeReaderImpl implements TradeReader {
         return tradeRepository.tradeDetail(userId,tradeId);
     }
 
-    public void userChk(Long tradeId,Long userId){
+    @Override
+    public Trade userChk(Long tradeId,Long userId){
        Trade trade = readTradeById(tradeId);
        if(!trade.getUser().getId().equals(userId)) {
            throw new IllegalArgumentException("권한이 없습니다.");
        }
+       return trade;
+    }
+
+    @Override
+    public List<TradeInfo.TradeList> fetchTrendingTrade(Long userId) {
+        WeekRange weekRange = new WeekRange();
+        log.info("start -> {} ",weekRange.getStartOfWeek());
+        log.info("end   -> {} ",weekRange.getEndOfWeek());
+       return tradeRepository.fetchTrendingTrade(userId,weekRange.getStartOfWeek(),weekRange.getEndOfWeek());
+
     }
 }

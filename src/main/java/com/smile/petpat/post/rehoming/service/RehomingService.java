@@ -7,27 +7,27 @@ import com.smile.petpat.user.domain.User;
 import org.springframework.data.domain.Pageable;
 
 public interface RehomingService {
-    void registerRehoming(User user, RehomingCommand rehomingCommand);
+    void registerRehoming(String userEmail, RehomingCommand rehomingCommand);
 
-    RehomingPagingDto listRehomingForMember(User user, Pageable pageable);
+    RehomingPagingDto listRehomingForMember(String userEmail, Pageable pageable);
 
     RehomingPagingDto listRehoming(Pageable pageable);
 
-    RehomingResDto detailRehomingForMember(Long postId, User user);
+    RehomingResDto detailRehomingForMember(Long postId, String userEmail);
 
     RehomingResDto detailRehoming(Long postId);
 
-    RehomingResDto updateRehoming(User user, Long postId, RehomingCommand rehomingCommand);
+    RehomingResDto updateRehoming(String userEmail, Long postId, RehomingCommand rehomingCommand);
 
-    void deleteRehoming(User user, Long postId);
+    void deleteRehoming(String userEmail, Long postId);
 
-    void updateStatusFinding(User user, Long postId);
+    void updateStatusFinding(String userEmail, Long postId);
 
-    void updateStatusReserved(User user, Long postId);
+    void updateStatusReserved(String userEmail, Long postId);
 
-    void updateStatusMatched(User user, Long postId);
+    void updateStatusMatched(String userEmail, Long postId);
 
-    RehomingPagingDto getCategoryListForMember(User user, Long categoryId, Long typeId, Pageable pageable);
+    RehomingPagingDto getCategoryListForMember(String userEmail, Long categoryId, Long typeId, Pageable pageable);
     RehomingPagingDto getCategoryList(Long categoryId, Long typeId, Pageable pageable);
 
 }

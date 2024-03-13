@@ -33,8 +33,6 @@ public class TradeStoreImpl implements TradeStore {
 
     @Override
     public Trade update(Trade trade,Long userId,Long postId) {
-        tradeReader.userChk(postId,userId);
-        Trade save = tradeRepository.save(trade);
         return tradeRepository.save(trade);
     }
 

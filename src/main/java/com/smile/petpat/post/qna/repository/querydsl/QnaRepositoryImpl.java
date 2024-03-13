@@ -7,6 +7,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.qna.domain.QnaInfo;
+import com.smile.petpat.post.trade.domain.TradeInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,10 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.smile.petpat.image.domain.QImage.image;
+import static com.smile.petpat.post.common.bookmarks.domain.QBookmark.bookmark;
+import static com.smile.petpat.post.common.likes.domain.QLikes.likes;
 import static com.smile.petpat.post.qna.domain.QQna.qna;
+import static com.smile.petpat.post.trade.domain.QTrade.trade;
 
 public class QnaRepositoryImpl implements QnaRepositoryQueryDsl {
     private final JPAQueryFactory queryFactory;
@@ -59,6 +63,47 @@ public class QnaRepositoryImpl implements QnaRepositoryQueryDsl {
         long total = results.getTotal();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public QnaInfo.QnaDetail qnaDetailForUser(Long userId, Long postId) {
+        return queryFactory
+                .select
+                        (Projections.constructor
+                                (QnaInfo.QnaDetail.class,
+                                        qna.qnaId,
+                                        qna.user.id,
+                                        qna.user.nickname,
+                                        qna.title,
+                                        qna.content,
+                                        qna.postType,
+                                        qna.viewCnt,
+                                        qna.createdAt
+                                )
+                        )
+                .from(qna)
+                .where(qna.qnaId.eq(postId))
+                .fetchOne();
+    }
+
+    public QnaInfo.QnaDetail qnaDetail(Long postId) {
+        return queryFactory
+                .select
+                        (Projections.constructor
+                                (QnaInfo.QnaDetail.class,
+                                        qna.qnaId,
+                                        qna.title,
+                                        qna.content,
+                                        qna.postType,
+                                        qna.viewCnt,
+                                        qna.createdAt
+                                )
+                        )
+                .from(qna)
+                .where(qna.qnaId.eq(postId))
+                .fetchOne();
+
+
     }
 
 }

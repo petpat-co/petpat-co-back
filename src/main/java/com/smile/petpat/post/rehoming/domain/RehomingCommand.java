@@ -27,7 +27,7 @@ public class RehomingCommand {
     @NotNull(message = "이미지는 필수값입니다.")
     private List<MultipartFile> rehomingImg;
     @NotBlank(message = "제목은 필수값입니다.") private String title;
-    @NotBlank(message = "설명은 필수값입니다.") private String description;
+    @NotBlank(message = "설명은 필수값입니다.") private String content;
     @NotBlank(message = "이름은 필수값입니다.") private String petName;
     private String petAge;
     @NotNull(message = "카테고리는 필수값입니다.") private Long category;
@@ -49,7 +49,7 @@ public class RehomingCommand {
         return RehomingCommand.builder()
                 .rehomingImg(rehomingImg)
                 .title(title)
-                .description(description)
+                .content(content)
                 .petName(petName)
                 .petAge(petAge)
                 .category(category)
@@ -67,7 +67,7 @@ public class RehomingCommand {
         return Rehoming.builder()
                 .user(user)
                 .title(title)
-                .description(description)
+                .content(content)
                 .petName(petName)
                 .petAge(getPetAge())
                 .category(category)
@@ -88,7 +88,7 @@ public class RehomingCommand {
                 .rehomingId(rehomingId)
                 .user(user)
                 .title(title)
-                .description(description)
+                .content(content)
                 .petName(petName)
                 .petAge(getPetAge())
                 .category(category)

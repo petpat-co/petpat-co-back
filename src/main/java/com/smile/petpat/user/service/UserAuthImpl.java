@@ -146,7 +146,7 @@ public class UserAuthImpl implements UserAuth {
 
     @Override
     public String forceLogin(User socialUser) {
-        UserDetails userDetails = new User(socialUser);
+        UserDetails userDetails = new UserDetailsImpl(socialUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
