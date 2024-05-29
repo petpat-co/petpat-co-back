@@ -60,9 +60,9 @@ public class UserAuthImpl implements UserAuth {
     @Override
     public HttpHeaders generateHeaderTokens(User user) {
         String accessToken = getToken(user);
-        String refreshToken = saveRefreshTokenToRedis(user);
+//        String refreshToken = saveRefreshTokenToRedis(user);
         headers.set(HttpHeaders.AUTHORIZATION,"Bearer " + accessToken);
-        headers.set("RefreshToken",refreshToken);
+//        headers.set("RefreshToken",refreshToken);
         return headers;
     }
 
