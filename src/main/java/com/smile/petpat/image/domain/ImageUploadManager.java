@@ -19,14 +19,11 @@ public class ImageUploadManager {
 
     /** User 프로필 등록 */
     public String saveProfileImage(MultipartFile multipartFile,String originImgPath) {
-<<<<<<< HEAD
-        imageUtils.getFileExtension(multipartFile.getOriginalFilename());
-=======
+
         String fakeFileName = imageUtils.generateRandomFileName(multipartFile.getOriginalFilename());
 //        String originFileName = multipartFile.getOriginalFilename();
 //        String filepath = s3Uploader.uploadFile(multipartFile);
 
->>>>>>> b39bf65d8346f427d09a47da0bc62da20a05aa8a
         //기존 프로필 이미지 삭제
         if(originImgPath!="") {  //기존 프로필 이미지가 있는 경우
             s3Uploader.deleteImage(originImgPath);

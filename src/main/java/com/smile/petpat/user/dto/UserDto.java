@@ -1,12 +1,8 @@
 package com.smile.petpat.user.dto;
 
 import com.smile.petpat.user.domain.UserCommand;
-<<<<<<< HEAD
-import lombok.Builder;
-import lombok.Data;
-=======
 import com.smile.petpat.user.domain.UserRole;
->>>>>>> b39bf65d8346f427d09a47da0bc62da20a05aa8a
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;

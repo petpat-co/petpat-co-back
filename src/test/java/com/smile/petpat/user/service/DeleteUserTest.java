@@ -62,7 +62,7 @@ public class DeleteUserTest {
         rehoming =Rehoming.builder()
                 .user(user)
                 .title("title_TEST")
-                .description("description_TEST")
+                .content("content_TEST")
                 .petName("petName_TEST")
                 .category(categoryGroup)
                 .type(petCategory)
