@@ -48,7 +48,7 @@ public class getMyRehomingRepositoryTest {
         //2명의 User 생성
         user = createUser(1);
         User anotherUser = createUser(2);
-        
+
         CategoryGroup categoryGroup =categoryGroupRepository.findById(1L).get();
         PetCategory petCategory = petCategoryRepository.findById(1L).get();
 

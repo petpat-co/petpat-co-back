@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
-public class getMyRehomingTest {
+public class getMyRehomingServiceTest {
     @Autowired
     private ProfileService profileService;
     @Autowired
