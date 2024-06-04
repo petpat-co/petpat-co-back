@@ -45,76 +45,83 @@ public class getMyRehomingRepositoryTest {
 
     @BeforeEach
     void setup(){
-        user = User.builder()
-                .userEmail("userEmail_TEST")
-                .nickname("nickname_TEST")
-                .password(passwordEncoder.encode("test11!!"))
-                .profileImgPath("TEST.jpg")
-                .loginType(User.loginTypeEnum.NORMAL)
-                .build();
-
-        user = userRepository.save(user);
-
-        User anotherUser = User.builder()
-                .userEmail("userEmail_ANOTHER")
-                .nickname("nickname_ANOTHER")
-                .password(passwordEncoder.encode("test11!!"))
-                .profileImgPath("TEST.jpg")
-                .loginType(User.loginTypeEnum.NORMAL)
-                .build();
-        anotherUser = userRepository.save(anotherUser);
-
+        //2명의 User 생성
+        user = createUser(1);
+        User anotherUser = createUser(2);
+        
         CategoryGroup categoryGroup =categoryGroupRepository.findById(1L).get();
         PetCategory petCategory = petCategoryRepository.findById(1L).get();
 
         Rehoming rehoming_TEST;
 
         //사용자가 5개의 Rehoming 게시글 작성
-        for(int i=0; i<5; i++){
-            rehoming_TEST = Rehoming.builder()
-                    .user(user)
-                    .title("title_TEST "+i)
-                    .content("content_TEST "+i)
-                    .petName("petName_TEST "+i)
-                    .category(categoryGroup)
-                    .type(petCategory)
-                    .gender(RehomingCommand.PetGender.BOY)
-                    .cityName("cityName_TEST "+i)
-                    .cityCountryName("cityCountryName_TEST "+i)
-                    .townShipName("townShipName_TEST "+i)
-                    .fullAdName("fullAdName_TEST "+i)
-                    .build();
-
-            rehomingRepository.save(rehoming_TEST);
-        }
+        createRehomingPosts(user,categoryGroup, petCategory,5);
 
         //다른 사용자가 2개의 Rehoming 게시글 작성
-        for(int i=0; i<2; i++){
+        createRehomingPosts(anotherUser,categoryGroup,petCategory,2);
+    }
+
+
+
+    @Nested
+    @DisplayName("Success")
+    public class Success{
+        @Test
+        @DisplayName("내가 작성한 분양글 조회 성공")
+        void Success(){
+            //when
+            List<ProfileDto.RehomingResponse> responses =
+                    userRepository.getMyRehoming(user.getId(),pageable).getContent();
+
+            //then
+            assertEquals(5, responses.size());
+            //TODO, 조회한 게시글의 작성자가 user가 맞는 지 검증 필요, RehomingResponse 수정 필요
+        }
+
+    }
+    @Nested
+    @DisplayName("Failure")
+    class Failure{
+        @Test
+        @DisplayName("존재하지 않는 User가 조회 시")
+        void fail_UserId_Not_Exist(){
+            List<ProfileDto.RehomingResponse> responses =
+                    userRepository.getMyRehoming(-1L,pageable).getContent();
+
+            assertTrue(responses.isEmpty());
+        }
+    }
+
+
+    private User createUser(int num) {
+        User user = User.builder()
+                .userEmail("userEmail_TEST_"+num)
+                .nickname("nickname_TEST_"+num)
+                .password(passwordEncoder.encode("test11!!"))
+                .profileImgPath("TEST.jpg_"+num)
+                .loginType(User.loginTypeEnum.NORMAL)
+                .build();
+
+        return userRepository.save(user);
+    }
+    private void createRehomingPosts(User user, CategoryGroup categoryGroup, PetCategory petCategory,int num) {
+        Rehoming rehoming_TEST;
+        for(int i = 0; i<num; i++){
             rehoming_TEST = Rehoming.builder()
-                    .user(anotherUser)
-                    .title("title_anotherUser "+i)
-                    .content("content_anotherUser "+i)
-                    .petName("petName_anotherUser "+i)
+                    .user(user)
+                    .title("title_TEST "+num)
+                    .content("content_TEST "+num)
+                    .petName("petName_TEST "+num)
                     .category(categoryGroup)
                     .type(petCategory)
                     .gender(RehomingCommand.PetGender.BOY)
-                    .cityName("cityName_anotherUser "+i)
-                    .cityCountryName("cityCountryName_anotherUser "+i)
-                    .townShipName("townShipName_anotherUser "+i)
-                    .fullAdName("fullAdName_anotherUser "+i)
+                    .cityName("cityName_TEST "+num)
+                    .cityCountryName("cityCountryName_TEST "+num)
+                    .townShipName("townShipName_TEST "+num)
+                    .fullAdName("fullAdName_TEST "+num)
                     .build();
 
             rehomingRepository.save(rehoming_TEST);
         }
     }
-
-    @Test
-    @DisplayName("내가 작성한 분양글 조회 성공")
-    void Success(){
-        List<ProfileDto.RehomingResponse> list =
-                userRepository.getMyRehoming(user.getId(),pageable).getContent();
-
-        assertEquals(5, list.size());
-    }
-
 }

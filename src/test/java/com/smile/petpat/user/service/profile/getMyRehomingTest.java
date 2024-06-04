@@ -1,11 +1,5 @@
 package com.smile.petpat.user.service.profile;
 
-import com.smile.petpat.post.category.domain.CategoryGroup;
-import com.smile.petpat.post.category.domain.PetCategory;
-import com.smile.petpat.post.category.repository.CategoryGroupRepository;
-import com.smile.petpat.post.category.repository.PetCategoryRepository;
-import com.smile.petpat.post.rehoming.domain.Rehoming;
-import com.smile.petpat.post.rehoming.domain.RehomingCommand;
 import com.smile.petpat.user.domain.ProfileService;
 import com.smile.petpat.user.domain.User;
 import com.smile.petpat.user.dto.ProfileDto;
@@ -27,7 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest
@@ -46,6 +42,7 @@ public class getMyRehomingTest {
     @BeforeEach
     void setup(){
         user = User.builder()
+                .id(1L)
                 .userEmail("userEmail_TEST")
                 .nickname("nickname_TEST")
                 .password(passwordEncoder.encode("test11!!"))
@@ -85,6 +82,29 @@ public class getMyRehomingTest {
             assertEquals(2,responseList.size());
             assertEquals("title_TEST 1",responseList.get(0).getTitle());
             assertEquals("title_TEST 2",responseList.get(1).getTitle());
+
+            Mockito.verify(userRepository).getMyRehoming(user.getId(),pageable);
+        }
+    }
+
+    @Nested
+    @DisplayName("Failure")
+    class Failure{
+
+        @Test
+        @DisplayName("사용자가 작성한 Rehmoming 게시글이 없는 경우")
+        void fail_No_Rehoming_Posts(){
+            //given
+            Mockito.when(userRepository.getMyRehoming(user.getId(),pageable))
+                    .thenReturn(Page.empty());
+
+            //when
+            List<ProfileDto.RehomingResponse> responses
+                    =profileService.getMyRehoming(user,pageable).getContent();
+
+            //then
+            assertTrue(responses.isEmpty());
+            Mockito.verify(userRepository).getMyRehoming(user.getId(),pageable);
         }
     }
 }

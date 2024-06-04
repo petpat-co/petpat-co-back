@@ -32,8 +32,8 @@ public class checkPasswordTest {
     @BeforeEach
     void setup(){
         user = User.builder()
-                .userEmail("userEmail_TEST")
-                .nickname("nickname_TEST")
+                .userEmail("userEmail_TEST@asd1.com")
+                .nickname("nickname_TEST1")
                 .password(passwordEncoder.encode("test11!!"))
                 .profileImgPath("TEST.jpg")
                 .loginType(User.loginTypeEnum.NORMAL)

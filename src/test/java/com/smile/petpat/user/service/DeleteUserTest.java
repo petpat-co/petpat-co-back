@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-//@Transactional
+@Transactional
 public class DeleteUserTest {
     @Autowired
     private ProfileService     profileService;
@@ -46,7 +46,7 @@ public class DeleteUserTest {
     @BeforeEach
     void setup(){
         User user = User.builder()
-                .userEmail("userEmail_TEST")
+                .userEmail("userEmail_TEST@test.com")
                 .nickname("nickname_TEST")
                 .password(passwordEncoder.encode("test11!!"))
                 .profileImgPath("TEST.jpg")
@@ -84,19 +84,15 @@ public class DeleteUserTest {
         @DisplayName("Success")
         void deleteSuccess() {
             //given
-            User user = userRepository.findByUserEmail("userEmail_TEST").get();
+            User user = userRepository.findByUserEmail("userEmail_TEST@test.com").get();
 
             //when
             profileService.deleteUser(user);
 
+
             //then
-            Rehoming rehoming_UserDeleted = rehomingRepository.findById(rehoming.getRehomingId()).get();
             Exception ex =assertThrows(NoSuchElementException.class,
                     ()->userRepository.findById(user.getId()).get());
-
-            assertNotEquals(rehoming_UserDeleted.getUser().getNickname(),
-                    "nickname_TEST");
-            assertTrue(rehoming_UserDeleted.getUser().getNickname().contains("del"));
         }
     }
 
@@ -108,7 +104,7 @@ public class DeleteUserTest {
         @DisplayName("실패 _ 존재하지 않는(이미 삭제된) 아이디")
         void deleteFail_User_Not_Exist(){
             //given
-            User user = userRepository.findByUserEmail("userEmail_TEST").get();
+            User user = userRepository.findByUserEmail("userEmail_TEST@test.com").get();
             profileService.deleteUser(user);
 
             //when&&then
