@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 import static com.smile.petpat.post.category.dto.PostCategoryInfo.*;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class PostCategoryServiceImpl implements PostCategoryService{
 
     private final PostCategoryGroupRepository postCategoryGroupRepository;

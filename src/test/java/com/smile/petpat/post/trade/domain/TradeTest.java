@@ -126,11 +126,6 @@ class TradeTest {
                 .title("제목테스트")
                 .content("내용 테스트")
                 .price(10000L)
-                .cityName("서울시")
-                .cityCountryName("양천구")
-                .townShipName("목동")
-                .detailAdName("목동로 230")
-                .fullAdName("서울시 양천구 목동로 230")
                 .tradeCategoryDetail(tradeCategoryDetail1)
                 .build();
     }

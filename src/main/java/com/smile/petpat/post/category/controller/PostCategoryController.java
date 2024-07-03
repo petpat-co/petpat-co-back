@@ -2,6 +2,7 @@ package com.smile.petpat.post.category.controller;
 
 import com.smile.petpat.common.response.SuccessResponse;
 import com.smile.petpat.post.category.dto.PostCategoryInfo;
+import com.smile.petpat.post.category.service.PostCategoryService;
 import com.smile.petpat.post.category.service.PostCategoryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

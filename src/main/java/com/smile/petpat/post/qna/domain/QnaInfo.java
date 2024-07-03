@@ -1,5 +1,6 @@
 package com.smile.petpat.post.qna.domain;
 
+import com.smile.petpat.image.dto.ImageResDto;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.common.CalculateTime;
 import com.smile.petpat.post.common.status.PostStatus;
@@ -64,7 +65,7 @@ public class QnaInfo {
         private String nickname;
         private String title;
         private String content;
-        private List<String> imageList;
+        private List<ImageResDto> imageList;
         private PostType postType;
         private int viewCnt;
         private String createAt;
@@ -73,8 +74,8 @@ public class QnaInfo {
 
         }
 
-        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, List<String> imageList, PostType postType,
-                         LocalDateTime createAt
+        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, List<ImageResDto> imageList, PostType postType,
+                         int viewCnt, LocalDateTime createAt
         ) {
             this.qnaId = qnaId;
             this.userId = userId;
@@ -87,8 +88,8 @@ public class QnaInfo {
             this.createAt = CalculateTime.dateformatForPost(createAt);
         }
 
-        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, PostType postType, Long isLiked, Long isBookmarked, int viewCnt,
-                           Long likeCnt, Long bookmarkCnt, String qnaCategoryDetailName,PostStatus status,LocalDateTime createAt) {
+        public QnaDetail(Long qnaId, Long userId, String nickname, String title, String content, PostType postType, int viewCnt,
+                           LocalDateTime createAt) {
             this.qnaId = qnaId;
             this.userId = userId;
             this.nickname = nickname;
@@ -99,7 +100,7 @@ public class QnaInfo {
             this.createAt = CalculateTime.dateformatForPost(createAt);
         }
 
-        public QnaDetail(QnaDetail qnaDetail, List<String> imageList) {
+        public QnaDetail(QnaDetail qnaDetail, List<ImageResDto> imageList) {
             this.qnaId = qnaDetail.qnaId;
             this.userId = qnaDetail.userId;
             this.nickname = qnaDetail.nickname;

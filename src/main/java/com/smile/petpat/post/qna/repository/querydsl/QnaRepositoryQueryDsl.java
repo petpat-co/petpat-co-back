@@ -7,9 +7,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface QnaRepositoryQueryDsl {
-    Page<QnaInfo.QnaList> qnaList(Long userId, Pageable pageable);
+//    Page<QnaInfo.QnaList> qnaList(Long userId, Pageable pageable);
 
-    QnaInfo.QnaDetail qnaDetailForUser(Long userId, Long postId);
+    Page<QnaInfo.QnaList> qnaList(Pageable pageable);
+
     QnaInfo.QnaDetail qnaDetail(Long postId);
 
 }

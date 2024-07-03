@@ -1,11 +1,11 @@
 package com.smile.petpat.post.trade.repository;
 
-import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.category.domain.TradeCategoryDetail;
 import com.smile.petpat.post.category.repository.TradeCategoryDetailRepository;
-import com.smile.petpat.post.common.status.PostStatus;
+import com.smile.petpat.post.common.Address.Dto.AddressReqDto;
+import com.smile.petpat.post.common.Address.domain.Address;
+import com.smile.petpat.post.common.Address.service.AddressService;
 import com.smile.petpat.post.trade.domain.Trade;
-import com.smile.petpat.post.trade.repository.TradeRepository;
 import com.smile.petpat.user.domain.User;
 import com.smile.petpat.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,15 +23,17 @@ class TradeRepositoryTest {
     private final UserRepository userRepository;
     private final TradeRepository tradeRepository;
     private final TradeCategoryDetailRepository tradeCategoryDetailRepository;
+    private final AddressService addressService;
 
     public TradeRepositoryTest(
             @Autowired UserRepository userRepository,
             @Autowired TradeRepository tradeRepository,
-            @Autowired TradeCategoryDetailRepository tradeCategoryDetailRepository
-    ){
+            @Autowired TradeCategoryDetailRepository tradeCategoryDetailRepository,
+            @Autowired AddressService addressService){
         this.userRepository = userRepository;
         this.tradeRepository=tradeRepository;
         this.tradeCategoryDetailRepository = tradeCategoryDetailRepository;
+        this.addressService = addressService;
     }
 
     private User user1;
@@ -50,6 +52,7 @@ class TradeRepositoryTest {
     @DisplayName("중고거래 게시물 Create 테스트")
     @Test
     void givenTestData_whenCreating_thenWorksFine(){
+        Address address = addressService.getAddress(new AddressReqDto("서울특별시","","마포구","연남동"));
         // Given
         TradeCategoryDetail tradeCategoryDetail = (tradeCategoryDetailRepository.findById(1L).orElseThrow(
                 () -> new IllegalArgumentException("존재하지않는 카테고리 아이디입니다.")
@@ -62,11 +65,7 @@ class TradeRepositoryTest {
                 .title("테스트중고거래제목1")
                 .content("테스트중고거래내용1")
                 .price(1000L)
-                .cityName("서울시")
-                .cityCountryName("양천구")
-                .townShipName("목동")
-                .detailAdName("103")
-                .fullAdName("서울시 양천구 목동 103")
+                .address(address)
                 .tradeCategoryDetail(tradeCategoryDetail)
                 .build();
         Trade saveTrade = tradeRepository.save(trade);

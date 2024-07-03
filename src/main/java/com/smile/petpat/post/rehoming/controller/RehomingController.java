@@ -2,13 +2,15 @@ package com.smile.petpat.post.rehoming.controller;
 
 import com.smile.petpat.common.response.SuccessResponse;
 import com.smile.petpat.post.rehoming.domain.RehomingCommand;
+import com.smile.petpat.post.rehoming.domain.RehomingInfo;
 import com.smile.petpat.post.rehoming.dto.RehomingPagingDto;
+import com.smile.petpat.post.rehoming.dto.RehomingUpdateReqDto;
+import com.smile.petpat.post.rehoming.service.RehomingService;
 import com.smile.petpat.post.rehoming.service.RehomingServiceImpl;
 import com.smile.petpat.user.service.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +19,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@Slf4j
 @Tag(name = "RehomingController", description = "분양 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/rehoming")
 public class RehomingController {
 
-    private final RehomingServiceImpl rehomingService;
+    private final RehomingService rehomingService;
 
     /**
      * 분양 게시물 등록
@@ -87,14 +89,17 @@ public class RehomingController {
      * 분양 게시물 수정
      * @return 성공 시 200 Success 및 수정된 게시물 반환
      */
+    /**
+     * TODO: http://localhost:8081/api/v1/rehoming?postId=1 로 Put method로 보낼 때 오류 발생
+     *      "message" : "Default value must not be null" 오류 발생
+     */
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "분양게시물 수정", description = "분양게시물 수정")
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public SuccessResponse updateRehoming(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                           @RequestParam Long postId,
-                                          @ModelAttribute @Valid RehomingCommand rehomingDto) {
-        RehomingCommand rehomingCommand = rehomingDto.toCommand();
-        return SuccessResponse.success(rehomingService.updateRehoming(userDetails.getUsername(), postId, rehomingCommand), "OK");
+                                          @ModelAttribute @Valid RehomingUpdateReqDto rehomingDto) {
+        return SuccessResponse.success(rehomingService.updateRehoming(userDetails.getUsername(), postId, rehomingDto), "OK");
     }
 
     /**
@@ -162,5 +167,15 @@ public class RehomingController {
         rehomingPagingDto = rehomingService.getCategoryList(categoryId, typeId, pageable);
         return ResponseEntity.ok(rehomingPagingDto);
 
+    }
+
+    /**
+     * 인기있는 중고거래 게시물 3개 추출
+     * @return 성공 시 200 Success 반환
+     */
+    @Operation(summary = "인기있는 분양 게시물", description = "인기있는 분양 게시물")
+    @RequestMapping(value = "/trending",method = RequestMethod.GET)
+    public ResponseEntity<List<RehomingInfo>> fetchTrendingRehoming(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(rehomingService.fetchTrendingRehoming(userDetails.getUser()));
     }
 }

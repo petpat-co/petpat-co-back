@@ -4,6 +4,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.smile.petpat.image.domain.ImagePriority;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.user.dto.ProfileDto;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class UserRepositoryImpl implements ProfileRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(rehoming.rehomingId),
                                                         image.postType.eq(PostType.REHOMING),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "rehomingImg"),
                                 rehoming.title,
                                 rehoming.createdAt,
@@ -96,7 +97,7 @@ public class UserRepositoryImpl implements ProfileRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(trade.tradeId),
                                                         image.postType.eq(PostType.TRADE),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "tradeImgUrl"),
                                 trade.title,
                                 trade.createdAt,
@@ -150,7 +151,7 @@ public class UserRepositoryImpl implements ProfileRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(rehoming.rehomingId),
                                                         image.postType.eq(PostType.REHOMING),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "rehomingImg"),
                                 rehoming.title,
                                 rehoming.createdAt,
@@ -182,7 +183,7 @@ public class UserRepositoryImpl implements ProfileRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(trade.tradeId),
                                                         image.postType.eq(PostType.TRADE),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "tradeImgUrl"),
                                 trade.title,
                                 trade.createdAt,
@@ -240,7 +241,7 @@ public class UserRepositoryImpl implements ProfileRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(rehoming.rehomingId),
                                                         image.postType.eq(PostType.REHOMING),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "rehomingImg"),
                                 rehoming.title,
                                 rehoming.createdAt,
@@ -272,7 +273,7 @@ public class UserRepositoryImpl implements ProfileRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(trade.tradeId),
                                                         image.postType.eq(PostType.TRADE),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "tradeImgUrl"),
                                 trade.title,
                                 trade.createdAt,

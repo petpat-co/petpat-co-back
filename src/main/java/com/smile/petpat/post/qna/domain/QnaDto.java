@@ -41,4 +41,26 @@ public class QnaDto {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @ToString
+    public static class QnAUpdateDto{
+        @NotBlank(message = "제목은 필수입니다.")
+        private String title;
+        @NotBlank(message = "내용은 필수입니다.")
+        private String content;
+
+        private List<MultipartFile> newImages;
+        private List<Long> deletedImageId;
+
+        public QnaCommand toCommand(){
+            return QnaCommand.builder()
+                    .title(title)
+                    .content(content)
+                    .images(newImages)
+                    .deletedImageId(deletedImageId)
+                    .build();
+        }
+    }
 }

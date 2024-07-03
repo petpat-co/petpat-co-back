@@ -7,12 +7,14 @@ import com.smile.petpat.post.category.domain.PetCategory;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.category.repository.CategoryGroupRepository;
 import com.smile.petpat.post.category.repository.PetCategoryRepository;
+import com.smile.petpat.post.common.Address.domain.Address;
 import com.smile.petpat.post.rehoming.domain.Rehoming;
 import com.smile.petpat.post.rehoming.domain.RehomingCommand;
 import com.smile.petpat.post.rehoming.repository.RehomingRepository;
 import com.smile.petpat.user.domain.ProfileService;
 import com.smile.petpat.user.domain.User;
 import com.smile.petpat.user.repository.UserRepository;
+import com.smile.petpat.utils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -41,39 +43,15 @@ public class DeleteUserTest {
     private CategoryGroupRepository categoryGroupRepository;
     @Autowired
     private PetCategoryRepository petCategoryRepository;
+    @Autowired private TestUtils testUtils;
+    private Address address;
 
     Rehoming rehoming;
     @BeforeEach
     void setup(){
-        User user = User.builder()
-                .userEmail("userEmail_TEST@test.com")
-                .nickname("nickname_TEST")
-                .password(passwordEncoder.encode("test11!!"))
-                .profileImgPath("TEST.jpg")
-                .loginType(User.loginTypeEnum.NORMAL)
-                .build();
+        User user = testUtils.createUser(1);
 
-        user = userRepository.save(user);
-
-        CategoryGroup categoryGroup =categoryGroupRepository.findById(1L).get();
-        PetCategory petCategory = petCategoryRepository.findById(1L).get();
-
-
-        rehoming =Rehoming.builder()
-                .user(user)
-                .title("title_TEST")
-                .content("content_TEST")
-                .petName("petName_TEST")
-                .category(categoryGroup)
-                .type(petCategory)
-                .gender(RehomingCommand.PetGender.BOY)
-                .cityName("cityName_TEST")
-                .cityCountryName("cityCountryName_TEST")
-                .townShipName("townShipName_TEST")
-                .fullAdName("fullAdName_TEST")
-                .build();
-
-        rehoming = rehomingRepository.save(rehoming);
+        testUtils.createRehomingPosts(user,address,1);
     }
 
     @Nested

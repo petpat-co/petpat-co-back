@@ -24,8 +24,8 @@ public class TradeReaderImpl implements TradeReader {
     private final TradeCategoryDetailRepository tradeCategoryDetailRepository;
 
     @Override
-    public Page<TradeInfo.TradeList> readTradeList(User user, Pageable pageable) {
-        return tradeRepository.tradeList_Paging(user.getId(),pageable);
+    public Page<TradeInfo.TradeList> readTradeList(Long userId, Pageable pageable) {
+        return tradeRepository.tradeList_Paging(userId,pageable);
     }
 
     @Override
@@ -43,13 +43,17 @@ public class TradeReaderImpl implements TradeReader {
     }
 
     @Override
-    public TradeInfo.TradeDetail readTradeDetail(Long userId, Long tradeId) {
-        readTradeById(tradeId);
-        return tradeRepository.tradeDetail(userId,tradeId);
+    public TradeInfo.TradeDetail readTradeDetailForUser(Long userId, Long tradeId) {
+        return tradeRepository.tradeDetailForUser(userId,tradeId);
     }
 
     @Override
-    public Trade userChk(Long tradeId,Long userId){
+    public TradeInfo.TradeDetail readTradeDetail(Long tradeId) {
+        return tradeRepository.tradeDetail(tradeId);
+    }
+
+    @Override
+    public Trade getTradeAndUserChk(Long tradeId, Long userId){
        Trade trade = readTradeById(tradeId);
        if(!trade.getUser().getId().equals(userId)) {
            throw new IllegalArgumentException("권한이 없습니다.");

@@ -1,9 +1,6 @@
 package com.smile.petpat.user.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,8 +11,8 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "TB_USER")
 @SQLDelete(sql = "UPDATE TB_USER SET DELETED = true, NICKNAME =CONCAT('del_',FLOOR(RAND()*1000000)) WHERE USER_ID=? ")

@@ -10,10 +10,10 @@ import org.springframework.data.domain.Pageable;
 public interface QnaService {
     void registerQna(QnaCommand qnaCommand, User user);
 
-    QnaInfo.QnaPagingListInfo listQna(User user, Pageable pageable);
-    QnaInfo.QnaDetail updateQna(User user, Long postId, QnaCommand qnaCommand);
+//    QnaInfo.QnaPagingListInfo listQna(User user, Pageable pageable);
 
-    QnaInfo.QnaDetail detailQnaForUser(Long postId, User user);
+    QnaInfo.QnaPagingListInfo listQna(Pageable pageable);
+    QnaInfo.QnaDetail updateQna(User user, Long postId, QnaCommand qnaCommand);
 
     QnaInfo.QnaDetail detailQna(Long postId);
 

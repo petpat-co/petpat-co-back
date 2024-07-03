@@ -5,6 +5,9 @@ import com.smile.petpat.post.rehoming.dto.RehomingResDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface RehomingRepositoryQuerydsl {
     Page<RehomingInfo> rehomingListForMember(String userEmail, Pageable pageable);
 
@@ -14,5 +17,7 @@ public interface RehomingRepositoryQuerydsl {
     
     Page<RehomingInfo> rehomingCategoryList(Long categoryId, Long typeId, Pageable pageable);
 
-    RehomingResDto readRehomingDetailForMember(String userEmail, Long rehomingId);
- }
+//    RehomingResDto readRehomingDetailForMember(String userEmail, Long rehomingId);
+
+    List<RehomingInfo> fetchTrendingRehoming(Long userId, LocalDateTime startOfWeek, LocalDateTime endOfWeek);
+}

@@ -15,15 +15,17 @@ public class QnaCommand {
     private String content;
     private User user;
     private List<MultipartFile> images;
+    private List<Long> deletedImageId;
 
     public QnaCommand(){
 
     }
-    public QnaCommand(String title, String content, User user, List<MultipartFile> images) {
+    public QnaCommand(String title, String content, User user, List<MultipartFile> images,List<Long> deletedImageId) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.images = images;
+        this.deletedImageId = deletedImageId;
     }
 
     public Qna toRegisterEntity(User user){

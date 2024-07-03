@@ -30,11 +30,9 @@ public class  TradeController {
     @Operation(summary = "중고거래 게시물 등록", description = "중고거래 게시물 등록")
     @RequestMapping(value = "",method = RequestMethod.POST)
     public SuccessResponse registerTrade(@ModelAttribute @Valid TradeDto.CommonTrade tradeDto,
-                                         @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
         TradeCommand tradeCommand = tradeDto.toCommand();
-        tradeService.registerTrade(tradeCommand,userDetails.getUser());
-        return SuccessResponse.success("ok");
+        return SuccessResponse.success(tradeService.registerTrade(tradeCommand,userDetails.getUser()));
     }
 
     /**
@@ -45,8 +43,9 @@ public class  TradeController {
     @RequestMapping(value = "",method = RequestMethod.GET)
     public SuccessResponse listTrade(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                      @PageableDefault() Pageable pageable){
-        if(userDetails == null){
-            // 1. 로그인 안한 유저
+        //TODO: 비로그인인 유저를 다르게 처리해야함, 미완료 상태
+        if (userDetails.getUser().getUserEmail().split("@")[1].contains("guest")) { //비회원 유저가 조회
+            return SuccessResponse.success(tradeService.listTrade(userDetails.getUser(),pageable),"ok");
         }
         // 2. 로그인 한 유저
         return SuccessResponse.success(tradeService.listTrade(userDetails.getUser(),pageable),"ok");
@@ -59,9 +58,9 @@ public class  TradeController {
     @Operation(summary = "중고거래 게시물 상세조회", description = "중고거래 게시물 상세조회")
     @RequestMapping(value = "/{tradeId}",method = RequestMethod.GET)
     public SuccessResponse detailTrade(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        if (userDetails == null) {
+        if (userDetails.getUser().getUserEmail().split("@")[1].contains("guest")) { //비회원 유저가 조회
             return SuccessResponse.success(tradeService.tradeDetail(tradeId),"ok");
-        } else {
+        } else { //회원인 유저가 조회
             return SuccessResponse.success(tradeService.tradeDetailforUser(tradeId, userDetails.getUser()),"ok");
         }
     }
@@ -72,10 +71,9 @@ public class  TradeController {
      */
     @Operation(summary = "중고거래 게시물 수정", description = "중고거래 게시물 수정")
     @RequestMapping(value = "/{postId}",method = RequestMethod.PUT)
-    public SuccessResponse updateTrade(@RequestBody TradeDto.CommonTrade tradeDto,
+    public SuccessResponse updateTrade(@ModelAttribute TradeDto.TradeUpdateDto tradeDto,
                                        @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                       @PathVariable Long postId
-    ){
+                                       @PathVariable Long postId){
         TradeCommand tradeCommand = tradeDto.toCommand();
         return SuccessResponse.success(tradeService.updateTrade(userDetails.getUser(),postId,tradeCommand));
     }
@@ -90,7 +88,7 @@ public class  TradeController {
                                        @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         tradeService.deleteTrade(tradeId,userDetails.getUser());
-        return SuccessResponse.success("ok");
+        return SuccessResponse.success("OK");
     }
     /**
      * 인기있는 중고거래 게시물 3개 추출
@@ -98,9 +96,7 @@ public class  TradeController {
      */
     @Operation(summary = "인기있는 중고거래 게시물", description = "인기있는 중고거래 게시물")
     @RequestMapping(value = "/trending",method = RequestMethod.GET)
-    public SuccessResponse fetchTrendingTrade(@AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-
+    public SuccessResponse fetchTrendingTrade(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return SuccessResponse.success( tradeService.fetchTrendingTrade(userDetails.getUser()));
     }
 
@@ -108,24 +104,21 @@ public class  TradeController {
     @RequestMapping(value = "/statusFinding", method = RequestMethod.POST)
     public SuccessResponse updateStatusFinding(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                @RequestParam Long postId) {
-        tradeService.updateStatusFinding(userDetails.getUser(), postId);
-        return SuccessResponse.success("OK");
+        return SuccessResponse.success(tradeService.updateStatusFinding(userDetails.getUser(), postId));
     }
 
     @Operation(summary = "중고거래 게시물 예약 중")
     @RequestMapping(value = "/statusReserved", method = RequestMethod.POST)
     public SuccessResponse updateStatusReserved(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                 @RequestParam Long postId) {
-        tradeService.updateStatusReserved(userDetails.getUser(), postId);
-        return SuccessResponse.success("OK");
+        return SuccessResponse.success(tradeService.updateStatusReserved(userDetails.getUser(), postId));
     }
 
     @Operation(summary = "중고거래 게시물 예약 완료")
     @RequestMapping(value = "/statusMatched", method = RequestMethod.POST)
     public SuccessResponse updateStatusMatched(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                @RequestParam Long postId) {
-        tradeService.updateStatusMatched(userDetails.getUser(), postId);
-        return SuccessResponse.success("OK");
+        return SuccessResponse.success(tradeService.updateStatusMatched(userDetails.getUser(), postId));
     }
 
 }

@@ -5,22 +5,21 @@ import com.smile.petpat.image.repository.ImageRepository;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.category.domain.TradeCategoryDetail;
 import com.smile.petpat.post.category.repository.TradeCategoryDetailRepository;
+import com.smile.petpat.post.common.Address.Dto.AddressReqDto;
+import com.smile.petpat.post.common.Address.domain.Address;
+import com.smile.petpat.post.common.Address.service.AddressService;
 import com.smile.petpat.post.trade.domain.Trade;
 import com.smile.petpat.post.trade.domain.TradeCommand;
 import com.smile.petpat.post.trade.domain.TradeInfo;
 import com.smile.petpat.post.trade.repository.TradeRepository;
 import com.smile.petpat.user.domain.User;
 import com.smile.petpat.user.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +41,8 @@ class TradeServiceImplTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AddressService addressService;
 
 
     @Autowired
@@ -93,11 +94,11 @@ class TradeServiceImplTest {
         // given
         TradeCommand tradeCommand = initTradeCommand(1L,initImageList);
         // when
-        Long tradeId = tradeService.registerTrade(tradeCommand, mockUser);
-        Trade trade = tradeRepository.findById(tradeId).orElseThrow(
+        TradeInfo.TradeDetail tradeDetail = tradeService.registerTrade(tradeCommand, mockUser);
+        Trade trade = tradeRepository.findById(tradeDetail.getPostId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 아이디입니다.")
         );
-        List<Image> imageList = imageRepository.findAllByPostIdAndPostTypeOrderByPostId(tradeId, PostType.TRADE);
+        List<Image> imageList = imageRepository.findAllByPostIdAndPostTypeOrderByPostId(tradeDetail.getPostId(), PostType.TRADE);
 
         // then
         assertThat(trade.getTradeId()).isNotNull();
@@ -112,14 +113,14 @@ class TradeServiceImplTest {
     void updateTrade()  {
         // given
         TradeCommand tradeCommand = initTradeCommand(1L,initImageList);
-        Long tradeId = tradeService.registerTrade(tradeCommand, mockUser);
+        TradeInfo.TradeDetail tradeDetail = tradeService.registerTrade(tradeCommand, mockUser);
 
         // when
-        tradeService.updateTrade(mockUser,tradeId,initUpdateTradeCommand(2L,updateImageList));
-        Trade trade = tradeRepository.findById(tradeId).orElseThrow(
+        tradeService.updateTrade(mockUser,tradeDetail.getPostId(),initUpdateTradeCommand(2L,updateImageList));
+        Trade trade = tradeRepository.findById(tradeDetail.getPostId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 아이디입니다.")
         );
-        List<Image> imageList = imageRepository.findAllByPostIdAndPostTypeOrderByPostId(tradeId, PostType.TRADE);
+        List<Image> imageList = imageRepository.findAllByPostIdAndPostTypeOrderByPostId(tradeDetail.getPostId(), PostType.TRADE);
         // then
         assertThat(trade.getTradeId()).isEqualTo(1L);
         assertThat(trade.getTitle()).isEqualTo("제목수정테스트");
@@ -135,12 +136,12 @@ class TradeServiceImplTest {
     void deleteTrade(){
         // given
         TradeCommand tradeCommand = initTradeCommand(1L,initImageList);
-        Long tradeId = tradeService.registerTrade(tradeCommand, mockUser);
+        TradeInfo.TradeDetail tradeDetail = tradeService.registerTrade(tradeCommand, mockUser);
         Long tradeCnt = tradeRepository.count();
         Long imageCnt = imageRepository.count();
 
         // when
-        tradeService.deleteTrade(tradeId,mockUser);
+        tradeService.deleteTrade(tradeDetail.getPostId(),mockUser);
         Long afterTradeCnt =  tradeRepository.count();
         Long currentImgCnt = imageRepository.count();
 
@@ -201,11 +202,7 @@ class TradeServiceImplTest {
                 .title("제목수정테스트")
                 .content("내용수정테스트")
                 .price(11000L)
-                .cityName("수원시")
-                .cityCountryName("수원구")
-                .townShipName("수지구")
-                .detailAdName("수원로 230")
-                .fullAdName("수원시 수원구 수지구 수원로 230")
+                .province("서울특별시").city("").district("마포구").town("연남동")
                 .tradeCategoryDetailId(tradeCategoryDetailId)
                 .images(multipartFileList)
                 .build();
@@ -217,11 +214,7 @@ class TradeServiceImplTest {
                 .title("제목테스트")
                 .content("내용 테스트")
                 .price(10000L)
-                .cityName("서울시")
-                .cityCountryName("양천구")
-                .townShipName("목동")
-                .detailAdName("목동로 230")
-                .fullAdName("서울시 양천구 목동로 230")
+                .province("서울특별시").city("").district("마포구").town("연남동")
                 .tradeCategoryDetailId(tradeCategoryDetailId)
                 .images(multipartFileList)
                 .build();

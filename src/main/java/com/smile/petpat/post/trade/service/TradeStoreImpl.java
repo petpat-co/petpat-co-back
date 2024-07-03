@@ -1,8 +1,6 @@
 package com.smile.petpat.post.trade.service;
 
-import com.smile.petpat.post.category.repository.TradeCategoryDetailRepository;
 import com.smile.petpat.post.trade.domain.Trade;
-import com.smile.petpat.post.trade.domain.TradeReader;
 import com.smile.petpat.post.trade.domain.TradeStore;
 import com.smile.petpat.post.trade.repository.TradeRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +24,7 @@ public class TradeStoreImpl implements TradeStore {
 
     @Override
     public void delete(Long tradeId,Long userId) {
-        tradeReader.userChk(tradeId,userId);
+        tradeReader.getTradeAndUserChk(tradeId,userId);
         tradeRepository.deleteById(tradeId);
-
     }
-
-    @Override
-    public Trade update(Trade trade,Long userId,Long postId) {
-        return tradeRepository.save(trade);
-    }
-
-
 }

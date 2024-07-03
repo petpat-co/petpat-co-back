@@ -1,8 +1,10 @@
 package com.smile.petpat.post.trade.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.smile.petpat.config.comm.Timestamped;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.category.domain.TradeCategoryDetail;
+import com.smile.petpat.post.common.Address.domain.Address;
 import com.smile.petpat.post.common.status.PostStatus;
 import com.smile.petpat.user.domain.User;
 import lombok.Builder;
@@ -33,21 +35,13 @@ public class Trade extends Timestamped {
     @Column(name = "PRICE", nullable = false, length = 8)
     private Long price;
 
-    @Column(name = "CITY_NAME", nullable = false)
-    private String cityName;
-
-    @Column(name = "CITY_COUNTRY_NAME", nullable = false)
-    private String cityCountryName;
-
-    @Column(name = "TOWNSHIP_NAME", nullable = false)
-    private String townShipName;
+    @ManyToOne
+    @JoinColumn(name = "ADDRESS_ID")
+    @JsonBackReference //양방향 관계의 엔티티의 직렬화 방향 설정 -> 순환참조 방지
+    private Address address;
 
     @Column(name = "DETAIL_AD_NAME")
     private String detailAdName;
-
-    @Column(name = "FULL_AD_NAME", nullable = false)
-    private String fullAdName;
-
 
     @Column(name = "POST_TYPE" , nullable = false)
     @Enumerated(EnumType.STRING)
@@ -69,16 +63,14 @@ public class Trade extends Timestamped {
 
 
      // 중고거래 게시물 등록
-    public Trade(User user, String title, String content, Long price, String cityName, String cityCountryName, String townShipName, String detailAdName, String fullAdName, TradeCategoryDetail tradeCategoryDetail) {
+    @Builder
+    public Trade(User user, String title, String content, Long price, String detailAdName, TradeCategoryDetail tradeCategoryDetail,Address address) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.price = price;
-        this.cityName = cityName;
-        this.cityCountryName = cityCountryName;
-        this.townShipName = townShipName;
+        this.address =address;
         this.detailAdName = detailAdName;
-        this.fullAdName = fullAdName;
         this.postType = PostType.TRADE;
         this.status = PostStatus.TRADE_FINDING;
         this.viewCnt = 0;
@@ -86,17 +78,16 @@ public class Trade extends Timestamped {
     }
 
     @Builder
-    public Trade(Long tradeId, User user, String title, String content, Long price, String cityName, String cityCountryName, String townShipName, String detailAdName, String fullAdName, PostType postType, PostStatus status, int viewCnt, TradeCategoryDetail tradeCategoryDetail) {
+    public Trade(Long tradeId, User user, String title, String content, Long price, Address address, String detailAdName, PostType postType, PostStatus status, int viewCnt, TradeCategoryDetail tradeCategoryDetail) {
         this.tradeId = tradeId;
         this.user = user;
         this.title = title;
         this.content = content;
         this.price = price;
-        this.cityName = cityName;
-        this.cityCountryName = cityCountryName;
-        this.townShipName = townShipName;
+        this.address = address;
         this.detailAdName = detailAdName;
-        this.fullAdName = fullAdName;
+        this.postType =postType;
+        this.status= status;
         this.postType =PostType.TRADE;
         this.status = PostStatus.TRADE_FINDING;
         this.viewCnt = viewCnt;
@@ -107,11 +98,8 @@ public class Trade extends Timestamped {
         this.title = trade.getTitle();
         this.content = trade.getContent();
         this.price = trade.getPrice();
-        this.cityName = trade.getCityName();
-        this.cityCountryName = trade.getCityCountryName();
-        this.townShipName = trade.getTownShipName();
+        this.address =trade.address;
         this.detailAdName = trade.getDetailAdName();
-        this.fullAdName = trade.getFullAdName();
         this.tradeCategoryDetail = trade.getTradeCategoryDetail();
     }
 

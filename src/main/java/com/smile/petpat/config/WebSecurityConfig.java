@@ -81,11 +81,14 @@ public class WebSecurityConfig {
                 .permitAll()
 
                 .antMatchers(HttpMethod.GET,"/api/v1/rehoming/public/**").hasRole("GUEST")
+                .antMatchers(HttpMethod.GET,"/api/v1/qna/public/**").hasRole("GUEST")
                 .antMatchers("/api/v1/rehoming/**").hasRole("USER")
+                .antMatchers("/api/v1/qna/**").hasRole("USER")
 
                 .antMatchers("/api/v1/guest").hasRole("GUEST")
                 .antMatchers("/api/v1/user").hasRole("USER")
                 .antMatchers("/api/v1/admin").hasRole("ADMIN")
+
 
                 .anyRequest().authenticated();
 

@@ -28,8 +28,45 @@ public class QnaRepositoryImpl implements QnaRepositoryQueryDsl {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+//    @Override
+//    public Page<QnaInfo.QnaList> qnaList(Long userId, Pageable pageable) {
+//        QueryResults<QnaInfo.QnaList> results;
+//        results = queryFactory
+//                .select
+//                        (Projections.constructor
+//                                (QnaInfo.QnaList.class,
+//                                        qna.qnaId,
+//                                        qna.user.nickname,
+//                                        qna.title,
+//                                        ExpressionUtils.as(
+//                                                JPAExpressions
+//                                                        .select(image.filePath)
+//                                                        .from(image)
+//                                                        .where(
+//                                                                image.postId.eq(qna.qnaId)
+//                                                                        .and(image.postType.eq(PostType.QNA))
+//                                                        )
+//                                                        .orderBy(image.imageId.asc()).limit(1)
+//                                                ,"image"),
+//                                        qna.postType,
+//                                        qna.viewCnt,
+//                                        qna.createdAt
+//                                )
+//                        )
+//                .from(qna)
+//                .orderBy(qna.createdAt.desc())
+//                .offset(pageable.getOffset())
+//                .limit(pageable.getPageSize())
+//                .fetchResults();
+//
+//        List<QnaInfo.QnaList> content = results.getResults();
+//        long total = results.getTotal();
+//
+//        return new PageImpl<>(content, pageable, total);
+//    }
+
     @Override
-    public Page<QnaInfo.QnaList> qnaList(Long userId, Pageable pageable) {
+    public Page<QnaInfo.QnaList> qnaList(Pageable pageable) {
         QueryResults<QnaInfo.QnaList> results;
         results = queryFactory
                 .select
@@ -66,7 +103,7 @@ public class QnaRepositoryImpl implements QnaRepositoryQueryDsl {
     }
 
     @Override
-    public QnaInfo.QnaDetail qnaDetailForUser(Long userId, Long postId) {
+    public QnaInfo.QnaDetail qnaDetail(Long postId) {
         return queryFactory
                 .select
                         (Projections.constructor
@@ -74,24 +111,6 @@ public class QnaRepositoryImpl implements QnaRepositoryQueryDsl {
                                         qna.qnaId,
                                         qna.user.id,
                                         qna.user.nickname,
-                                        qna.title,
-                                        qna.content,
-                                        qna.postType,
-                                        qna.viewCnt,
-                                        qna.createdAt
-                                )
-                        )
-                .from(qna)
-                .where(qna.qnaId.eq(postId))
-                .fetchOne();
-    }
-
-    public QnaInfo.QnaDetail qnaDetail(Long postId) {
-        return queryFactory
-                .select
-                        (Projections.constructor
-                                (QnaInfo.QnaDetail.class,
-                                        qna.qnaId,
                                         qna.title,
                                         qna.content,
                                         qna.postType,

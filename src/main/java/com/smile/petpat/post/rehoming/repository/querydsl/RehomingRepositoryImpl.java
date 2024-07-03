@@ -4,15 +4,17 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.smile.petpat.image.domain.ImagePriority;
 import com.smile.petpat.post.category.domain.PostType;
 import com.smile.petpat.post.rehoming.domain.RehomingInfo;
-import com.smile.petpat.post.rehoming.dto.RehomingResDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.querydsl.jpa.JPAExpressions.select;
@@ -43,12 +45,10 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(rehoming.rehomingId),
                                                         image.postType.eq(PostType.REHOMING),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                                 , "rehomingImg"),
                                 rehoming.title,
-                                rehoming.cityName,
-                                rehoming.cityCountryName,
-                                rehoming.townShipName,
+                                rehoming.address,
                                 rehoming.status,
                                 ExpressionUtils.as(
                                         select(likes.count())
@@ -106,12 +106,10 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(rehoming.rehomingId),
                                                         image.postType.eq(PostType.REHOMING),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "rehomingImg"),
                                 rehoming.title,
-                                rehoming.cityName,
-                                rehoming.cityCountryName,
-                                rehoming.townShipName,
+                                rehoming.address,
                                 rehoming.status,
                                 rehoming.viewCnt,
                                 ExpressionUtils.as(
@@ -155,12 +153,10 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(rehoming.rehomingId),
                                                         image.postType.eq(PostType.REHOMING),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "rehomingImg"),
                                 rehoming.title,
-                                rehoming.cityName,
-                                rehoming.cityCountryName,
-                                rehoming.townShipName,
+                                rehoming.address,
                                 rehoming.status,
                                 ExpressionUtils.as(
                                         select(likes.count())
@@ -220,12 +216,10 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                                 .from(image)
                                                 .where(image.postId.eq(rehoming.rehomingId),
                                                         image.postType.eq(PostType.REHOMING),
-                                                        image.repImgNY.eq(true))
+                                                        image.priority.eq(ImagePriority.PRIORITY_1))
                                         , "rehomingImg"),
                                 rehoming.title,
-                                rehoming.cityName,
-                                rehoming.cityCountryName,
-                                rehoming.townShipName,
+                                rehoming.address,
                                 rehoming.status,
                                 rehoming.viewCnt,
                                 ExpressionUtils.as(
@@ -256,6 +250,7 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
         return new PageImpl<>(content, pageable, total);
     }
 
+    /* 사용하는 데 없음
     @Override
     public RehomingResDto readRehomingDetailForMember(String userEmail, Long rehomingId) {
         return queryFactory
@@ -273,9 +268,6 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                 rehoming.category,
                                 rehoming.type,
                                 rehoming.gender,
-                                rehoming.cityName,
-                                rehoming.cityCountryName,
-                                rehoming.townShipName,
                                 ExpressionUtils.as(
                                         select(likes.count())
                                                 .from(likes)
@@ -298,12 +290,82 @@ public class RehomingRepositoryImpl implements RehomingRepositoryQuerydsl {
                                         "likeCnt"),
                                 rehoming.status,
                                 rehoming.createdAt,
-                                rehoming.updatedAt
+                                rehoming.updatedAt,
+                                rehoming.dhppl,
+                                rehoming.covidEnteritis,
+                                rehoming.kennelCough,
+                                rehoming.influenza,
+                                rehoming.rabies,
+                                rehoming.comprehensiveVaccine,
+                                rehoming.fpv,
+                                rehoming.felv,
+                                rehoming.isNeutralized
                         )
                 )
                 .from(rehoming)
                 .where(rehoming.rehomingId.eq(rehomingId))
                 .fetchOne();
+    }
+
+     */
+
+    @Override
+    public List<RehomingInfo> fetchTrendingRehoming(Long userId, LocalDateTime startOfWeek, LocalDateTime endOfWeek) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                RehomingInfo.class,
+                                rehoming.rehomingId,
+                                rehoming.postType,
+                                ExpressionUtils.as(
+                                        JPAExpressions
+                                                .select(image.filePath)
+                                                .from(image)
+                                                .where(
+                                                        image.postId.eq(rehoming.rehomingId)
+                                                                .and(image.postType.eq(PostType.REHOMING))
+                                                                .and(image.priority.eq(ImagePriority.PRIORITY_1))
+                                                ), "image"),
+                                rehoming.title,
+                                rehoming.address,
+                                rehoming.status,
+                                ExpressionUtils.as(
+                                        select(likes.count())
+                                                .from(likes)
+                                                .where(
+                                                        likes.user.id.eq(userId)
+                                                                .and(likes.postId.eq(rehoming.rehomingId))
+                                                ), "isLiked"),
+                                ExpressionUtils.as(
+                                        select(bookmark.count())
+                                                .from(bookmark)
+                                                .where(
+                                                        bookmark.user.id.eq(userId)
+                                                                .and(bookmark.postId.eq(rehoming.rehomingId))
+                                                ), "isBookmarked"),
+                                rehoming.viewCnt,
+                                ExpressionUtils.as(
+                                        select(likes.count())
+                                                .from(likes)
+                                                .where(likes.postId.eq(rehoming.rehomingId)),
+                                        "likeCnt"),
+                                ExpressionUtils.as(
+                                        select(bookmark.count())
+                                                .from(bookmark)
+                                                .where(bookmark.postId.eq(rehoming.rehomingId)),
+                                        "bookmarkCnt"),
+                                rehoming.createdAt,
+                                rehoming.updatedAt
+
+                        )
+                )
+                .from(rehoming)
+                .leftJoin(likes).on(rehoming.rehomingId.eq(likes.postId).and(likes.postType.eq(PostType.REHOMING)))
+                .where(rehoming.createdAt.between(startOfWeek, endOfWeek))
+                .orderBy(likes.count().desc(), rehoming.createdAt.desc())
+                .groupBy(rehoming.rehomingId)
+                .limit(3)
+                .fetch();
     }
 
 }

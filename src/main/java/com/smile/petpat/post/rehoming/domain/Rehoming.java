@@ -1,22 +1,25 @@
 package com.smile.petpat.post.rehoming.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.smile.petpat.config.comm.Timestamped;
 import com.smile.petpat.post.category.domain.CategoryGroup;
 import com.smile.petpat.post.category.domain.PetCategory;
 import com.smile.petpat.post.category.domain.PostType;
+import com.smile.petpat.post.common.Address.domain.Address;
 import com.smile.petpat.post.common.status.PostStatus;
 import com.smile.petpat.user.domain.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "TB_REHOMING")
+@AllArgsConstructor
 @Builder
 @DynamicUpdate
 public class Rehoming extends Timestamped {
@@ -52,20 +55,14 @@ public class Rehoming extends Timestamped {
     @Column(name = "GENDER", nullable = false)
     private RehomingCommand.PetGender gender;
 
-    @Column(name = "CITY_NAME", nullable = false)
-    private String cityName;
-
-    @Column(name = "CITY_COUNTRY_NAME", nullable = false)
-    private String cityCountryName;
-
-    @Column(name = "TOWNSHIP_NAME", nullable = false)
-    private String townShipName;
+    @ManyToOne
+    @JoinColumn(name = "ADDRESS_ID")
+    @JsonBackReference //양방향 관계의 엔티티의 직렬화 방향 설정 -> 순환참조 방지
+    private Address address;
 
     @Column(name = "DETAIL_AD_NAME")
     private String detailAdName;
 
-    @Column(name = "FULL_AD_NAME", nullable = false)
-    private String fullAdName;
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
     private PostStatus status;
@@ -75,6 +72,33 @@ public class Rehoming extends Timestamped {
     private PostType postType;
     @Column(name = "VIEW_CNT")
     private int viewCnt;
+
+    @Column(name = "DHPPL_VACCINE")
+    private boolean dhppl;
+
+    @Column(name = "COVID_ENTERITIS_VACCINE")
+    private boolean covidEnteritis;
+
+    @Column(name = "KENNEL_COUGH_VACCINE")
+    private boolean kennelCough;
+
+    @Column(name = "INFLUENZA_VACCINE")
+    private boolean influenza;
+
+    @Column(name = "RABIES_VACCINE")
+    private boolean rabies;
+
+    @Column(name = "COMPREHENSIVE_VACCINE")
+    private boolean comprehensiveVaccine;
+
+    @Column(name = "FELINE_PARVOVIRUS_VACCINE")
+    private boolean fpv;
+
+    @Column(name = "FELINE_LEUKEMIA_VIRUS_VACCINE")
+    private boolean felv;
+
+    @Column(name = "IS_NEUTRALIZED")
+    private boolean isNeutralized;
 
     public void isFinding() {
         this.status = PostStatus.REHOMING_FINDING;
@@ -89,9 +113,10 @@ public class Rehoming extends Timestamped {
     }
 
     public Rehoming(Long rehomingId, User user, String title, String content, String petName, LocalDate petAge,
-                    CategoryGroup category, PetCategory type, RehomingCommand.PetGender gender, String cityName,
-                    String cityCountryName, String townShipName, String detailAdName, String fullAdName,
-                    PostStatus status, PostType postType, int viewCnt) {
+                    CategoryGroup category, PetCategory type, RehomingCommand.PetGender gender,  String detailAdName,
+                    PostStatus status, PostType postType, int viewCnt,
+                    boolean dhppl, boolean covidEnteritis, boolean kennelCough, boolean influenza, boolean rabies,
+                    boolean comprehensiveVaccine, boolean fpv, boolean felv, boolean isNeutralized) {
         this.rehomingId = rehomingId;
         this.user = user;
         this.title = title;
@@ -101,22 +126,28 @@ public class Rehoming extends Timestamped {
         this.category = category;
         this.type = type;
         this.gender = gender;
-        this.cityName = cityName;
-        this.cityCountryName = cityCountryName;
-        this.townShipName = townShipName;
         this.detailAdName = detailAdName;
-        this.fullAdName = fullAdName;
         this.status = status;
         this.postType = postType;
         this.viewCnt = viewCnt;
+        this.dhppl = dhppl;
+        this.covidEnteritis = covidEnteritis;
+        this.kennelCough = kennelCough;
+        this.influenza = influenza;
+        this.rabies = rabies;
+        this.comprehensiveVaccine = comprehensiveVaccine;
+        this.fpv = fpv;
+        this.felv = felv;
+        this.isNeutralized = isNeutralized;
     }
 
     public Rehoming() {
 
     }
 
+
     // 분양 게시글 수정
-    public void update(Rehoming initRehoming) {
+    public void update(Rehoming initRehoming,Address address) {
         this.title = initRehoming.getTitle();
         this.content = initRehoming.getContent();
         this.petName = initRehoming.getPetName();
@@ -124,12 +155,18 @@ public class Rehoming extends Timestamped {
         this.category = initRehoming.getCategory();
         this.type = initRehoming.getType();
         this.gender = initRehoming.getGender();
-        this.cityName = initRehoming.getCityName();
-        this.cityCountryName = initRehoming.getCityCountryName();
-        this.townShipName = initRehoming.getTownShipName();
+        this.address =address;
         this.detailAdName = initRehoming.getDetailAdName();
-        this.fullAdName = initRehoming.getFullAdName();
         this.status = initRehoming.getStatus();
+        this.dhppl = initRehoming.isDhppl();
+        this.covidEnteritis = initRehoming.isCovidEnteritis();
+        this.kennelCough = initRehoming.isKennelCough();
+        this.influenza = initRehoming.isInfluenza();
+        this.rabies = initRehoming.isRabies();
+        this.comprehensiveVaccine = initRehoming.isComprehensiveVaccine();
+        this.fpv = initRehoming.isFpv();
+        this.felv = initRehoming.isFelv();
+        this.isNeutralized = initRehoming.isNeutralized();
     }
 
     // 조회수 증가

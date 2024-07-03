@@ -26,16 +26,16 @@ public class QnaReaderImpl implements QnaReader {
         );
     }
 
-    @Override
-    public Page<QnaInfo.QnaList> readQnaList(User user, Pageable pageable) {
-        return qnaRepository.qnaList(user.getId(), pageable);
-    }
+//    @Override
+//    public Page<QnaInfo.QnaList> readQnaList(User user, Pageable pageable) {
+//        return qnaRepository.qnaList(user.getId(), pageable);
+//    }
 
     @Override
-    public QnaInfo.QnaDetail readQnaDetailForUser(Long userId, Long postId) {
-        readQnaById(postId);
-        return qnaRepository.qnaDetailForUser(userId, postId);
+    public Page<QnaInfo.QnaList> readQnaList(Pageable pageable) {
+        return qnaRepository.qnaList(pageable);
     }
+
 
     public QnaInfo.QnaDetail readQnaDetail(Long postId) {
         readQnaById(postId);
