@@ -5,22 +5,41 @@ import com.smile.petpat.common.response.ErrorCode;
 import com.smile.petpat.post.common.CommonUtils;
 import com.smile.petpat.user.domain.ProfileService;
 import com.smile.petpat.user.domain.User;
+import com.smile.petpat.user.domain.UserModify;
 import com.smile.petpat.user.dto.ProfileDto;
+import com.smile.petpat.user.dto.UserDto;
 import com.smile.petpat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
 @RequiredArgsConstructor
+@Service
 public class ProfileServiceImpl implements ProfileService {
     private final UserRepository profileRepository;
+    private final UserModify userModify;
     private final CommonUtils commonUtils;
 
     @Override
     public ProfileDto.ProfileResponse getProfile(User user) {
         return new ProfileDto.ProfileResponse(user);
+    }
+
+    @Override
+    public void modifyProfile(UserDto.ModifyUserRequest request, User user) {
+        userModify.modifyProfile(request,user);
+    }
+
+    @Override
+    public Boolean passwordCheck(String password, User user) {
+        return userModify.passwordCheck(password,user);
+    }
+
+    @Override
+    public User modifyPassword(UserDto.ModifyPasswordRequest request, User user) {
+        return modifyPassword(request,user);
     }
 
     @Override

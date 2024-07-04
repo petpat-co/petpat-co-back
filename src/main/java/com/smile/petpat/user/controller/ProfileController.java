@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/profile")
 public class ProfileController {
-    private final UserModify userModify;
     private final ProfileService profileService;
 
     /**
@@ -43,7 +42,7 @@ public class ProfileController {
     @RequestMapping(value="",method = RequestMethod.PUT)
     public SuccessResponse modifyProfile(@ModelAttribute UserDto.ModifyUserRequest request,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
-        userModify.modifyProfile(request,userDetails.getUser());
+        profileService.modifyProfile(request,userDetails.getUser());
         return SuccessResponse.noDataSuccess("OK");
     }
 
@@ -55,7 +54,7 @@ public class ProfileController {
     @RequestMapping(value ="/password",method = RequestMethod.POST)
     public SuccessResponse checkPassword(@RequestBody UserDto.CheckPasswordRequest request,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
-        userModify.passwordCheck(request.getPassword(),userDetails.getUser());
+        profileService.passwordCheck(request.getPassword(),userDetails.getUser());
         return SuccessResponse.noDataSuccess("OK");
     }
 
@@ -68,7 +67,7 @@ public class ProfileController {
     @RequestMapping(value ="/password",method = RequestMethod.PUT)
     public SuccessResponse modifyPassword(@RequestBody UserDto.ModifyPasswordRequest request,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
-        userModify.modifyPassword(request,userDetails.getUser());
+        profileService.modifyPassword(request,userDetails.getUser());
         return SuccessResponse.noDataSuccess("OK");
     }
 
