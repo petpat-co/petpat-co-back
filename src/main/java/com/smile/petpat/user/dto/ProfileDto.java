@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 public class ProfileDto {
 
-    @Getter
-    @Setter
+    @Data
     @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class RehomingResponse{
         private Long rehomingId;

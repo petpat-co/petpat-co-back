@@ -36,7 +36,6 @@ public class TestUtils {
                 .profileImgPath("TEST.jpg_" + num)
                 .loginType(User.loginTypeEnum.NORMAL)
                 .build();
-
         return userRepository.save(user);
     }
 

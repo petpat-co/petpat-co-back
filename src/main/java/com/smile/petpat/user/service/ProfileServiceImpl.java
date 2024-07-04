@@ -2,6 +2,7 @@ package com.smile.petpat.user.service;
 
 import com.smile.petpat.common.exception.CustomException;
 import com.smile.petpat.common.response.ErrorCode;
+import com.smile.petpat.post.common.CommonUtils;
 import com.smile.petpat.user.domain.ProfileService;
 import com.smile.petpat.user.domain.User;
 import com.smile.petpat.user.dto.ProfileDto;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
     private final UserRepository profileRepository;
+    private final CommonUtils commonUtils;
 
     @Override
     public ProfileDto.ProfileResponse getProfile(User user) {
@@ -23,6 +25,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Page<ProfileDto.RehomingResponse> getMyRehoming(User user, Pageable pageable) {
+        commonUtils.userChk(user.getUserEmail());
         return profileRepository.getMyRehoming(user.getId(),pageable);
     }
 
