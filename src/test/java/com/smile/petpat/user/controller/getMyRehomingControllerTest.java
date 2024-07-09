@@ -35,9 +35,8 @@ public class getMyRehomingControllerTest {
             = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 10), 0);
 
     private Pageable pageable = PageRequest.of(0,10);
-    private User user;
     @BeforeEach
-    public void setup(){
+    void setup(){
         Mockito.when(profileService.getMyRehoming(Mockito.any(User.class),Mockito.any(Pageable.class)))
                 .thenReturn(expectedResult);
     }
