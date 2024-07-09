@@ -35,12 +35,12 @@ public class UserModifyImpl implements UserModify {
                 ()->new CustomException(ErrorCode.ILLEGAL_USER_NOT_EXIST)
         );
 
-
         String filepath = imageUtils.saveProfileImage(request.getProfileImgFile(),
                 request.getProfileImgUrl());
 
         UserCommand userCommand = new UserCommand(request,filepath);
         user.modifyProfile(userCommand);
+
         return userRepository.save(user);
     }
 

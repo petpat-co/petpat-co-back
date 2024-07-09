@@ -2,9 +2,7 @@ package com.smile.petpat.user.dto;
 
 import com.smile.petpat.user.domain.UserCommand;
 import com.smile.petpat.user.domain.UserRole;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
@@ -68,6 +66,8 @@ public class UserDto {
     @Getter
     @Setter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ModifyUserRequest{
         private String username;
         private String profileImgUrl;
