@@ -1,7 +1,5 @@
 package com.smile.petpat.user.repository;
 
-import com.smile.petpat.post.category.repository.CategoryGroupRepository;
-import com.smile.petpat.post.category.repository.PetCategoryRepository;
 import com.smile.petpat.post.common.Address.Dto.AddressReqDto;
 import com.smile.petpat.post.common.Address.domain.Address;
 import com.smile.petpat.post.common.Address.service.AddressService;
@@ -15,17 +13,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @DataJpaTest
+@Import(TestUtils.class)
+@ActiveProfiles("test")
 @Transactional
 public class getMyRehomingRepositoryTest {
     @Autowired private UserRepository userRepository;
