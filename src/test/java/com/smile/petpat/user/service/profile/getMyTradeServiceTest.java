@@ -7,7 +7,6 @@ import com.smile.petpat.user.domain.ProfileService;
 import com.smile.petpat.user.domain.User;
 import com.smile.petpat.user.dto.ProfileDto;
 import com.smile.petpat.user.repository.UserRepository;
-import com.smile.petpat.utils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -27,62 +26,57 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class getMyRehomingServiceTest {
-    @Autowired
-    private ProfileService profileService;
-    @MockBean
-    private UserRepository userRepository;
+public class getMyTradeServiceTest {
+    @Autowired private ProfileService profileService;
+    @MockBean private UserRepository userRepository;
     @MockBean private CommonUtils commonUtils;
     Pageable pageable = PageRequest.of(0,10);
-    private Page<ProfileDto.RehomingResponse> expectedResult
-            = new PageImpl<>(Collections.emptyList(), pageable, 0);
+    private Page<ProfileDto.TradeResponse> expectedResult
+            =new PageImpl<>(Collections.emptyList(),pageable,0);
 
-    private User user;
-    private User deletedUser;
+    private User user = new User();
+    private User deletedUser = new User();
 
     @BeforeEach
     void setup(){
-        user =new User();
         user.setId(1L);
         user.setUserEmail("TestUser1");
 
-        Mockito.when(userRepository.getMyRehoming(user.getId(),pageable))
+        Mockito.when(userRepository.getMyTrade(user.getId(), pageable))
                 .thenReturn(expectedResult);
     }
+
     @Nested
     @DisplayName("SUCCESS")
     class Success{
-
         @Test
-        @DisplayName("SUCCESS")
+        @DisplayName("SUCCCES")
         void success(){
-            Page<ProfileDto.RehomingResponse> response = profileService.getMyRehoming(user,pageable);
+            Page<ProfileDto.TradeResponse> response
+                    = profileService.getMyTrade(user,pageable);
 
-            assertEquals(expectedResult.getContent(), response.getContent());
-            Mockito.verify(userRepository).getMyRehoming(user.getId(),pageable);
+            assertEquals(expectedResult.getContent(),response.getContent());
+            Mockito.verify(userRepository).getMyTrade(user.getId(), pageable);
         }
     }
 
     @Nested
     @DisplayName("FAILURE")
     class Failure{
-
         @Test
         @DisplayName("FAIL_USER_NOT_EXIST")
         void fail_User_Not_Exist(){
-            deletedUser = new User();
-            deletedUser.setUserEmail(" ");
             deletedUser.setDeleted(true);
+            deletedUser.setUserEmail(" ");
 
             Mockito.doThrow(new CustomException(ErrorCode.ILLEGAL_USER_NOT_EXIST))
                     .when(commonUtils).userChk(deletedUser.getUserEmail());
 
             Exception ex = assertThrows(CustomException.class,
-                    ()-> profileService.getMyRehoming(deletedUser,pageable));
+                    ()-> profileService.getMyTrade(deletedUser,pageable));
             assertEquals(ErrorCode.ILLEGAL_USER_NOT_EXIST.getMessage(),
                     ex.getMessage());
         }

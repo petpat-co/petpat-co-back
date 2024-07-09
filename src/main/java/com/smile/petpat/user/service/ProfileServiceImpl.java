@@ -50,6 +50,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Page<ProfileDto.TradeResponse> getMyTrade(User user, Pageable pageable) {
+        commonUtils.userChk(user.getUserEmail());
         return profileRepository.getMyTrade(user.getId(),pageable);
     }
 
